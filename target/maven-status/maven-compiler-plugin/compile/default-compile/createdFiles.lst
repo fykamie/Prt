@@ -1,9 +1,12 @@
-adatbazis/BuildPyramid.class
 jatek/adatbazisModosito.class
+adatbazis/BuildPyramid_.class
+jatek/FXMLController.class
+jatek/EndGame.class
+jatek/Ellenfel.class
+adatbazis/BuildPyramid.class
 adatbazis/LekerdezesekIF.class
 jatek/ReadyForStart.class
-adatbazis/BuildPyramid_.class
+jatek/Sources.class
 adatbazis/Lekerdezesek.class
 jatek/MainApp.class
-jatek/FXMLController.class
 jatek/Kockak.class

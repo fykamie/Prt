@@ -1,14 +1,12 @@
 package jatek;
 
-import adatbazis.Lekerdezesek;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 
 public class MainApp extends Application {
@@ -19,7 +17,14 @@ public class MainApp extends Application {
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
+                javafx.geometry.Rectangle2D primaryScreenBounds= Screen.getPrimary().getVisualBounds();
         
+        stage.setX(primaryScreenBounds.getMinX());
+        stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth(primaryScreenBounds.getWidth());
+        stage.setHeight(primaryScreenBounds.getHeight());
+        stage.setResizable(false);
+
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         stage.show();
