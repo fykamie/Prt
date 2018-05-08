@@ -4,6 +4,7 @@ jatek/FXMLController.class
 jatek/EndGame.class
 jatek/Ellenfel.class
 adatbazis/BuildPyramid.class
+jatek/Kevero.class
 adatbazis/LekerdezesekIF.class
 jatek/ReadyForStart.class
 jatek/Sources.class
