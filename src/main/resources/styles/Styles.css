@@ -1,3 +1,9 @@
+.root{
+     -fx-background-color: transparent;
+    -fx-background-image: url('/images/desert.jpg');
+    -fx-background-size: stretch;
+}
+
 .button {
     -fx-font-weight: bold;
     -fx-background-color: transparent;
