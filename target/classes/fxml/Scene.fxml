@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9" fx:controller="jatek.FXMLController">
+<AnchorPane fx:id="pane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9" fx:controller="jatek.FXMLController">
    <children>
       <AnchorPane fx:id="sajatKockakTarolo" />
       <AnchorPane fx:id="ellenfelKockakTarolo" />

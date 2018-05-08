@@ -12,6 +12,13 @@
     -fx-alignment: center;
 }
 
+.label {
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/pyramid_cube.png');
+    -fx-background-size: stretch;
+    -fx-alignment: center;
+}
+
 .button:hover{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 1 , 1);
 }

@@ -8,10 +8,7 @@ package jatek;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -131,7 +128,6 @@ public class FXMLController implements Initializable {
             else this.sellerCubesList.get(i).setPrefWidth(this.cube.getEllenfelKockaiLista().get(i)*myWidther);
             this.sellerCubesList.get(i).setLayoutX(myLayoutX+650-this.sellerCubesList.get(i).getPrefWidth()/2);
             this.sellerCubesList.get(i).setText(this.cube.getEllenfelKockaiLista().get(i).toString());
-//            this.sellerCubesList.get(i).setTextAlignment(TextAlignment.CENTER);
             this.sellerCubesList.get(i).setEffect(new GaussianBlur());
         }
     }
@@ -153,6 +149,8 @@ public class FXMLController implements Initializable {
             this.selectedCube.setLayoutY(560);
             this.selectedCube.setDisable(false);
     }
+    
+    
     
     
 }
