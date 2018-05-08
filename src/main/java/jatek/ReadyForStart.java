@@ -26,7 +26,7 @@ public class ReadyForStart {
         EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
         Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
-        adatbazisModosito nullazo= new adatbazisModosito();
+        AdatbazisModosito nullazo= new AdatbazisModosito();
         nullazo.mindentKiNullaz(ef);
         nullazo.setTableForStart(ef);
         
