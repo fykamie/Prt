@@ -7,6 +7,7 @@ package jatek;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -116,6 +117,15 @@ public class Kockak {
                 return false;
         
         return true;
+    }
+    
+    public Integer randomotDob(){
+        Random rn= new Random();
+        int random= rn.nextInt(this.randomKockakLista.size());
+        while( randomKockakLista.get(random) == csereleshezKocka )
+            random= rn.nextInt(randomKockakLista.size());
+        
+        return randomKockakLista.get(random);
     }
     
 }
