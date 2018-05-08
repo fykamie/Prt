@@ -102,6 +102,12 @@ public class Kockak {
         randomKocka= ellenfelKockaiLista.get(hol);
         ellenfelKockaiLista.set(hol, seged);
     }
+    
+    public void swapRandomKockaEsCsereleshez(){
+        int seged= randomKocka;
+        randomKocka= csereleshezKocka;
+        csereleshezKocka= randomKocka;
+    }
         
     public boolean megvizsgalomSorbanVannakSajatKockaim(){
         for( int index= 0; index < sajatKockaimLista.size()-1 ; index++ )
