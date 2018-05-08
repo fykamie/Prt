@@ -15,7 +15,7 @@ import javax.persistence.Persistence;
  *
  * @author eszti
  */
-public class adatbazisModosito {
+public class AdatbazisModosito {
         
     public void mindentKiNullaz(EntityManagerFactory emf){
         if(!emf.isOpen())
