@@ -1,3 +1,9 @@
+.root{
+     -fx-background-color: transparent;
+    -fx-background-image: url('/images/desert.jpg');
+    -fx-background-size: stretch;
+}
+
 .button {
     -fx-font-weight: bold;
     -fx-background-color: transparent;
@@ -7,5 +13,11 @@
 }
 
 .button:hover{
-    -fx-effect: dropshadow(three-pass-box, white , 5, 0.0 , 1 , 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 1 , 1);
+}
+.ImageView{
+    -fx-alignment: BASELINE_RIGHT;
+    -fx-background-image: url('/images/batfarao_topog.gif');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100%;    
 }
