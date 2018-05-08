@@ -6,6 +6,7 @@ package jatek;
  * and open the template in the editor.
  */
 
+import adatbazis.Lekerdezesek;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -18,6 +19,8 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * FXML Controller class
@@ -49,10 +52,12 @@ public class FXMLController implements Initializable {
 
     private ArrayList<Label> sellerCubesList;
     private Kockak cube= new Kockak();
-    private Kevero keveres= new Kevero();
-    private ReadyForStart readyForStart= new ReadyForStart();
+    private final AdatbazisModosito adatbaModosito= new AdatbazisModosito();
+    private final Kevero keveres= new Kevero();
+    private final ReadyForStart readyForStart= new ReadyForStart();
     private final int myWidther= 6;
     private final int myLayoutX= 170;
+    private boolean randomotKattintott= false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
@@ -81,6 +86,7 @@ public class FXMLController implements Initializable {
             Label lab= new Label("sellerCube"+i);
             
             but.setLayoutY(60);
+            but.setOnAction(ev -> gombActionSajatKockakGombokon(ev));
             lab.setLayoutY(60);
             
             ownCubesList.add(but);
@@ -158,6 +164,7 @@ public class FXMLController implements Initializable {
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
         this.selectedCube.setDisable(true);
         this.randomCube.setDisable(true);
+        this.randomotKattintott= false;
     }
     
     public void gombActionRandomGombon(ActionEvent ev){
@@ -165,14 +172,63 @@ public class FXMLController implements Initializable {
         this.selectedCube.setDisable(true);
         this.randomCube.setDisable(true);
         
-        cube.setCsereleshezKocka(cube.randomotDob());
-        randomCube.setPrefWidth(this.cube.getCsereleshezKocka()*myWidther);
+        cube.setRandomKocka(cube.randomotDob());
+        randomCube.setPrefWidth(this.cube.getRandomKocka()*myWidther);
         randomCube.setLayoutX(myLayoutX+325-this.randomCube.getPrefWidth()/2);
-        randomCube.setText(cube.getCsereleshezKocka().toString());
+        randomCube.setText(cube.getRandomKocka().toString());
+        
+        randomotKattintott= true;
+    }
+    
+    public void gombActionSajatKockakGombokon(ActionEvent ev){
+        this.ownCubesList.stream().forEach(a -> a.setDisable(true));
+        this.selectedCube.setDisable(false);
+        this.randomCube.setDisable(false);
+        
+        Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
+        Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
+        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
+//        Lekerdezesek lekerdezes= new Lekerdezesek(ef);
+        
+        if(!randomotKattintott){
+            cube.swapCserelniEsSajatKockaim(holKattintott);
+            adatbaModosito.swapSajatEsCsereleshez(ef, mitKattintott);
+        }
+        else{
+            Integer randomPozicioja= randomKockakKozottKeresiPoziciojat(cube.getRandomKocka());
+            adatbaModosito.swapRandomEsCsereleshez(ef, cube.getRandomKocka());
+            cube.swapRandomKockaEsCsereleshez();
+            adatbaModosito.swapSajatEsCsereleshez(ef, mitKattintott);
+            cube.setEgyKockaRandomKockakbol(randomPozicioja, cube.getRandomKocka());
+            cube.swapCserelniEsSajatKockaim(holKattintott);
+        }
+
+
+        modifyOwnCubesList();
+        modifySelectedCube();
+        modifyRandomCube();
+        
+        ef.close();
         
     }
     
+    private Integer sajatbanKeresiPoziciojat(Integer minek){
+        int holvan;
+        for(holvan= 0; holvan< ownCubesList.size(); holvan++)
+            if( Integer.valueOf(ownCubesList.get(holvan).getText()) == minek)
+                break;
+        
+        return holvan;
+    }
     
+    private Integer randomKockakKozottKeresiPoziciojat(Integer minek){
+        int holvan;
+        for(holvan= 0; holvan< cube.getRandomKockakLista().size(); holvan++)
+            if( cube.getRandomKockakLista().get(holvan) == minek)
+                break;
+        
+        return holvan;
+    }
     
     
 }
