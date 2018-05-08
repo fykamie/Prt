@@ -13,11 +13,12 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
+        Parent root = fxmlLoader.load();
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-                javafx.geometry.Rectangle2D primaryScreenBounds= Screen.getPrimary().getVisualBounds();
+        javafx.geometry.Rectangle2D primaryScreenBounds= Screen.getPrimary().getVisualBounds();
         
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
@@ -27,6 +28,8 @@ public class MainApp extends Application {
 
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
+        
+        fxmlLoader.<FXMLController>getController().afterInitialize();
         stage.show();
     }
 
