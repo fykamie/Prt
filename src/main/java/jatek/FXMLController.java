@@ -9,6 +9,7 @@ package jatek;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -48,6 +49,7 @@ public class FXMLController implements Initializable {
 
     private ArrayList<Label> sellerCubesList;
     private Kockak cube= new Kockak();
+    private Kevero keveres= new Kevero();
     private ReadyForStart readyForStart= new ReadyForStart();
     private final int myWidther= 6;
     private final int myLayoutX= 170;
@@ -62,6 +64,8 @@ public class FXMLController implements Initializable {
         batfarao.setLayoutX(primaryScreenBounds.getMinX()+screenWidth-batfarao.getFitWidth()-7);
         
         cube= readyForStart.makeReady(cube);
+        cube.setSajatKockaimLista(keveres.kever(cube.getSajatKockaimLista()));
+        cube.setEllenfelKockaiLista(keveres.kever(cube.getEllenfelKockaiLista()));
         
         ownCubesList= new ArrayList<>();
         sellerCubesList= new ArrayList<>();
@@ -105,8 +109,8 @@ public class FXMLController implements Initializable {
         modifyRandomCube();
         modifySelectedCube();
 
-//        randomCube.setOnAction( (ev) -> clickedRandomCube(ev) );
-//        selectedCube.setOnAction( (ev) -> clickedSelectedCube(ev) );
+        randomCube.setOnAction( (ev) -> gombActionRandomGombon(ev) );
+        selectedCube.setOnAction( (ev) -> gombActionCsereleshezGombon(ev) );
        
         
     }
@@ -148,6 +152,24 @@ public class FXMLController implements Initializable {
             this.selectedCube.setText( this.cube.getCsereleshezKocka().toString());
             this.selectedCube.setLayoutY(560);
             this.selectedCube.setDisable(false);
+    }
+    
+    public void gombActionCsereleshezGombon(ActionEvent ev){
+        this.ownCubesList.stream().forEach(a -> a.setDisable(false));
+        this.selectedCube.setDisable(true);
+        this.randomCube.setDisable(true);
+    }
+    
+    public void gombActionRandomGombon(ActionEvent ev){
+        this.ownCubesList.stream().forEach(a -> a.setDisable(false));
+        this.selectedCube.setDisable(true);
+        this.randomCube.setDisable(true);
+        
+        cube.setCsereleshezKocka(cube.randomotDob());
+        randomCube.setPrefWidth(this.cube.getCsereleshezKocka()*myWidther);
+        randomCube.setLayoutX(myLayoutX+325-this.randomCube.getPrefWidth()/2);
+        randomCube.setText(cube.getCsereleshezKocka().toString());
+        
     }
     
     
