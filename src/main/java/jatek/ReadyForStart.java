@@ -7,6 +7,8 @@ package jatek;
 
 import java.util.List;
 import java.util.Random;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -15,6 +17,16 @@ import java.util.Random;
 public class ReadyForStart {
     private Random rn= new Random();
     private Integer random;
+    
+    public void makeReady(){
+        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
+        
+        adatbazisModosito nullazo= new adatbazisModosito();
+        nullazo.mindentKiNullaz(ef);
+        nullazo.setTableForStart(ef);
+        
+        ef.close();
+    }
     
     public List<Integer> sajatKockaimBeallitasa(Kockak kockak){
         for(int index= 0; index < 20; index++){
