@@ -35,20 +35,7 @@ public class MainApp extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
         
-        adatbazisModosito nullazo= new adatbazisModosito();
-        nullazo.mindentKiNullaz(ef);
-        nullazo.setTableForStart(ef);
-        
-        Lekerdezesek lekerdezesek= new Lekerdezesek(ef);
-        
-        
-        System.out.println("sajat meret: "+ lekerdezesek.get(a -> a.getKihezTartozik() == 1 ).size());
-        System.out.println("ellenfel meret: "+ lekerdezesek.get(a -> a.getKihezTartozik() == 2 ).size());
-        System.out.println("random meret: "+ lekerdezesek.get(a -> a.getKihezTartozik() == 3 ).size());
-
-        ef.close();
 
 
     }
