@@ -5,6 +5,10 @@
  */
 package jatek;
 
+import adatbazis.BuildPyramid;
+import adatbazis.Lekerdezesek;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.persistence.EntityManagerFactory;
@@ -18,14 +22,36 @@ public class ReadyForStart {
     private Random rn= new Random();
     private Integer random;
     
-    public void makeReady(){
+    public Kockak makeReady(Kockak kockak){
         EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
+        Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
         adatbazisModosito nullazo= new adatbazisModosito();
         nullazo.mindentKiNullaz(ef);
         nullazo.setTableForStart(ef);
         
+        List<BuildPyramid> sajatok= lekerdezes.get(a -> a.getKihezTartozik() == 1);
+        List<BuildPyramid> ellenfel= lekerdezes.get(a -> a.getKihezTartozik() == 2);
+        List<BuildPyramid> random= lekerdezes.get(a -> a.getKihezTartozik() == 3);
+        random.add(lekerdezes.get(a -> a.getKihezTartozik() == 4).get(0));
+        
+        List<Integer> sajatom= new ArrayList<>();
+        List<Integer> ellenfele= new ArrayList<>();
+        List<Integer> randomban= new ArrayList<>();
+        
+        lekerdezes.get(a -> a.getKihezTartozik() == 1).stream().forEach( a -> sajatom.add(a.getKockak()));
+        lekerdezes.get(a -> a.getKihezTartozik() == 2).stream().forEach( a -> ellenfele.add(a.getKockak()));
+        lekerdezes.get(a -> a.getKihezTartozik() == 3).stream().forEach( a -> randomban.add(a.getKockak()));
+        lekerdezes.get(a -> a.getKihezTartozik() == 4).stream().forEach( a -> randomban.add(a.getKockak()));
+        
+        kockak.setSajatKockaimLista(sajatom);
+        kockak.setEllenfelKockaiLista(ellenfele);
+        kockak.setRandomKockakLista(randomban);
+        kockak.setCsereleshezKocka(lekerdezes.get(a -> a.getKihezTartozik() == 4).get(0).getKihezTartozik());
+        
+        
         ef.close();
+        return kockak;
     }
     
     public List<Integer> sajatKockaimBeallitasa(Kockak kockak){
