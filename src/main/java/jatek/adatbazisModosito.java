@@ -72,4 +72,49 @@ public class adatbazisModosito {
         
     }
     
+    public void swapSajatEsCsereleshez(EntityManagerFactory emf, Integer mit){
+        if(!emf.isOpen())
+            emf= Persistence.createEntityManagerFactory("databaseConnection");
+        
+        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
+        BuildPyramid cserelendo= lekerdezes.getByID(mit);
+        BuildPyramid csereleshez= lekerdezes.get( a -> a.getKihezTartozik() == 4).get(0);
+        cserelendo.setKihezTartozik(4);
+        csereleshez.setKihezTartozik(1);
+        
+        lekerdezes.insert(cserelendo);
+        lekerdezes.insert(csereleshez);
+        
+    }
+    
+    public void swapEllenfelEsCsereleshez(EntityManagerFactory emf, Integer mit){
+        if(!emf.isOpen())
+            emf= Persistence.createEntityManagerFactory("databaseConnection");
+        
+        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
+        BuildPyramid cserelendo= lekerdezes.getByID(mit);
+        BuildPyramid csereleshez= lekerdezes.get( a -> a.getKihezTartozik() == 4).get(0);
+        cserelendo.setKihezTartozik(4);
+        csereleshez.setKihezTartozik(2);
+        
+        lekerdezes.insert(cserelendo);
+        lekerdezes.insert(csereleshez);
+        
+    }
+    
+    public void swapRandomEsCsereleshez(EntityManagerFactory emf, Integer mit){
+        if(!emf.isOpen())
+            emf= Persistence.createEntityManagerFactory("databaseConnection");
+        
+        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
+        BuildPyramid cserelendo= lekerdezes.getByID(mit);
+        BuildPyramid csereleshez= lekerdezes.get( a -> a.getKihezTartozik() == 4).get(0);
+        cserelendo.setKihezTartozik(4);
+        csereleshez.setKihezTartozik(3);
+        
+        lekerdezes.insert(cserelendo);
+        lekerdezes.insert(csereleshez);
+        
+    }
+    
 }
