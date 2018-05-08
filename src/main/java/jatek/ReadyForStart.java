@@ -80,7 +80,7 @@ public class ReadyForStart {
     
     public List<Integer> randomKockakBeallitasa( Kockak kockak ){
         for(int berakando= 1; berakando < 51; berakando++){
-            if( !kockak.getSajatKockaimLista().contains(berakando) && !kockak.getEllenfelKockaiLista().contains(berakando))
+            if( !kockak.getSajatKockaimLista().contains(berakando) || !kockak.getEllenfelKockaiLista().contains(berakando))
                 kockak.getRandomKockakLista().add(berakando);
         }
         
