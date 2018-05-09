@@ -11,16 +11,16 @@ package jatek;
  */
 public class Sources {
     private int mySource= 1000;
-
+    
     public int getMySource() {
         return mySource;
     }
     
-    public void minusz5(){
-        mySource-= 5;
+    public int minusz5(){
+       return mySource-= 5;
     }
     
-    public void plusz10(){
-        mySource+= 10;
+    public int plusz10(){
+       return mySource+= 10;
     }
 }

@@ -7,7 +7,6 @@ package jatek;
  */
 
 import adatbazis.BuildPyramid;
-import adatbazis.Lekerdezesek;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -70,11 +69,10 @@ public class FXMLController implements Initializable {
         batfarao.setFitWidth(screenWidth/6);
         batfarao.setLayoutX(primaryScreenBounds.getMinX()+screenWidth-batfarao.getFitWidth()-7);
         
-        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
-        cube= adatbaModosito.setTableForStart(emf);
-        emf.close();
-        cube.setSajatKockaimLista(keveres.kever(cube.getSajatKockaimLista()));
-        cube.setEllenfelKockaiLista(keveres.kever(cube.getEllenfelKockaiLista()));
+        cube= readyForStart.makeReady(cube);
+
+        cube.setSajatKockaimLista(Kevero.kever(cube.getSajatKockaimLista()));
+        cube.setEllenfelKockaiLista(Kevero.kever(cube.getEllenfelKockaiLista()));
         
         ownCubesList= new ArrayList<>();
         sellerCubesList= new ArrayList<>();
@@ -213,6 +211,17 @@ public class FXMLController implements Initializable {
         }
         emf.close();
 
+        modifyOwnCubesList();
+        modifySelectedCube();
+        modifyRandomCube();
+        
+        ownCubesList.forEach(a -> a.setDisable(true));
+        randomCube.setDisable(true);
+        selectedCube.setDisable(true);
+        
+        ellenfel.lep(cube);
+        
+        modifySellerCubesList();
         modifyOwnCubesList();
         modifySelectedCube();
         modifyRandomCube();

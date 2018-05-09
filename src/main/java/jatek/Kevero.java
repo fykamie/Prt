@@ -13,9 +13,9 @@ import java.util.Random;
  * @author eszti
  */
 public class Kevero {
-    Random rn= new Random();
+    private static Random rn= new Random();
     
-    public List<Integer> kever(List<Integer> keverendo){
+    public static List<Integer> kever(List<Integer> keverendo){
         int csereSeged;
         int pozicio;
         

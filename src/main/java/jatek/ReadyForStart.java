@@ -8,9 +8,9 @@ package jatek;
 import adatbazis.BuildPyramid;
 import adatbazis.Lekerdezesek;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -19,76 +19,76 @@ import javax.persistence.Persistence;
  * @author eszti
  */
 public class ReadyForStart {
-    private Random rn= new Random();
+    private final Random rn= new Random();
     private Integer random;
     
     public Kockak makeReady(Kockak kockak){
         EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
         Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
-        AdatbazisModosito nullazo= new AdatbazisModosito();
-        nullazo.mindentKiNullaz(ef);
-        nullazo.setTableForStart(ef);
+        new AdatbazisModosito().mindentKiNullaz(ef);
         
-        List<BuildPyramid> sajatok= lekerdezes.get(a -> a.getKihezTartozik() == 1);
-        List<BuildPyramid> ellenfel= lekerdezes.get(a -> a.getKihezTartozik() == 2);
-        List<BuildPyramid> random= lekerdezes.get(a -> a.getKihezTartozik() == 3);
-        random.add(lekerdezes.get(a -> a.getKihezTartozik() == 4).get(0));
+        Kockak kocku = new Kockak();
         
-        List<Integer> sajatom= new ArrayList<>();
-        List<Integer> ellenfele= new ArrayList<>();
-        List<Integer> randomban= new ArrayList<>();
+        List<BuildPyramid> mindenKocka = new ArrayList<>(50);
+        for(int i = 1; i < 51; ++i){
+            
+            mindenKocka.add(new BuildPyramid(i, 0));
+        }
         
-        lekerdezes.get(a -> a.getKihezTartozik() == 1).stream().forEach( a -> sajatom.add(a.getKockak()));
-        lekerdezes.get(a -> a.getKihezTartozik() == 2).stream().forEach( a -> ellenfele.add(a.getKockak()));
-        lekerdezes.get(a -> a.getKihezTartozik() == 3).stream().forEach( a -> randomban.add(a.getKockak()));
-        lekerdezes.get(a -> a.getKihezTartozik() == 4).stream().forEach( a -> randomban.add(a.getKockak()));
+        List<Integer> kie = new ArrayList<>(50);
+        for(int i = 0; i < 20; ++i){
+            kie.add(1);
+            kie.add(2);
+            if(i < 10 ){
+                kie.add(3);
+            }
+        }
         
-        kockak.setSajatKockaimLista(sajatom);
-        kockak.setEllenfelKockaiLista(ellenfele);
-        kockak.setRandomKockakLista(randomban);
-        kockak.setCsereleshezKocka(lekerdezes.get(a -> a.getKihezTartozik() == 4).get(0).getKihezTartozik());
+        kie = Kevero.kever(kie);
         
+        for(int i = 0; i < 50; ++i){
+            if(kie.get(i) == 3){
+                kie.set(i, 4);
+                break;
+            }
+        }
+        
+        for(int i = 0; i < 50; ++i){
+            mindenKocka.get(i).setKihezTartozik(kie.get(i));
+        }
+        
+        mindenKocka.forEach(e -> {
+        
+            lekerdezes.insert(e);
+        });
+        
+        kocku.setSajatKockaimLista(
+                mindenKocka.stream()
+                        .filter(e -> e.getKihezTartozik() == 1)
+                        .mapToInt(f -> f.getKockak())
+                        .boxed()
+                        .collect(Collectors.toList())
+        );
+        kocku.setEllenfelKockaiLista(
+                mindenKocka.stream()
+                        .filter(e -> e.getKihezTartozik() == 2)
+                        .mapToInt(f -> f.getKockak())
+                        .boxed()
+                        .collect(Collectors.toList())
+        );
+        kocku.setRandomKockakLista(
+                mindenKocka.stream()
+                        .filter(e -> e.getKihezTartozik() == 3)
+                        .mapToInt(f -> f.getKockak())
+                        .boxed()
+                        .collect(Collectors.toList())
+        );
+        
+        kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
         ef.close();
-        return kockak;
+        return kocku;
     }
     
-    public List<Integer> sajatKockaimBeallitasa(Kockak kockak){
-        for(int index= 0; index < 20; index++){
-            random= rn.nextInt(50)+1;
-            while(kockak.getSajatKockaimLista().contains(random)){
-                random= rn.nextInt(50)+1;
-            }
-            kockak.getSajatKockaimLista().add(random);
-        }
-        
-        return kockak.getSajatKockaimLista();
-    }
-    
-    public List<Integer> ellenfelKockainakBeallitasa(Kockak kockak){
-        for(int index= 0; index < 20; index++){
-            random= rn.nextInt(50)+1;
-            while(kockak.getEllenfelKockaiLista().contains(random) || kockak.getSajatKockaimLista().contains(random)){
-                random= rn.nextInt(50)+1;
-            }
-            kockak.getEllenfelKockaiLista().add(random);
-        }
-        
-        return kockak.getEllenfelKockaiLista();
-    }
-    
-    public List<Integer> randomKockakBeallitasa( Kockak kockak ){
-        for(int berakando= 1; berakando < 51; berakando++){
-            if( !kockak.getSajatKockaimLista().contains(berakando) && !kockak.getEllenfelKockaiLista().contains(berakando))
-                kockak.getRandomKockakLista().add(berakando);
-        }
-        
-        return kockak.getRandomKockakLista();
-    }
-    
-    public Integer randomKockaBeallitasa ( Kockak kockak){
-        kockak.setRandomKocka(kockak.getRandomKockakLista().get(rn.nextInt(kockak.getRandomKockakLista().size())));
-        return kockak.getRandomKocka();
-    }
 }
