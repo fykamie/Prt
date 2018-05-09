@@ -21,10 +21,14 @@ public class Sources {
     }
     
     public int minusz5(){
-       return mySource-= 5;
+        LOG.debug("csökkent a pontszám öttel");
+
+        return mySource-= 5;
     }
     
     public int plusz10(){
-       return mySource+= 10;
+        LOG.debug("nőtt a pontszám tízzel");
+
+        return mySource+= 10;
     }
 }

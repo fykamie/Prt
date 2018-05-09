@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author eszti
  */
 public class Kevero {
-    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
+    private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private static Random rn= new Random();
     
     public static List<Integer> kever(List<Integer> keverendo){
@@ -28,6 +28,7 @@ public class Kevero {
             keverendo.set(pozicio, csereSeged); 
         }
         
+        LOG.debug("megkevertük a listát");
         return keverendo;
     }
 }

@@ -122,38 +122,49 @@ public class FXMLController implements Initializable {
 
         randomCube.setOnAction( (ev) -> gombActionRandomGombon(ev) );
         selectedCube.setOnAction( (ev) -> gombActionCsereleshezGombon(ev) );
-       
-        
+
+        LOG.debug("játékhoz be- és felállítottuk a képernyőt");
     }
     
     public void modifyOwnCubesList(){
         for(int i= 19; i>=0; i--){
-            if ( this.cube.getSajatKockaimLista().get(i) < 5) this.ownCubesList.get(i).setPrefWidth(30);
-            else this.ownCubesList.get(i).setPrefWidth(this.cube.getSajatKockaimLista().get(i)*myWidther);
+            if ( this.cube.getSajatKockaimLista().get(i) < 5)
+                this.ownCubesList.get(i).setPrefWidth(30);
+            else
+                this.ownCubesList.get(i).setPrefWidth(this.cube.getSajatKockaimLista().get(i)*myWidther);
             this.ownCubesList.get(i).setLayoutX(myLayoutX-this.ownCubesList.get(i).getPrefWidth()/2);
             this.ownCubesList.get(i).setText(this.cube.getSajatKockaimLista().get(i).toString());
             this.ownCubesList.get(i).setDisable(true);
         }
         
+        LOG.debug("modosult a sajátkockák megjelenése");
     }
    
     public void modifySellerCubesList(){
         for(int i= 0; i<20; i++){
-            if ( this.cube.getEllenfelKockaiLista().get(i) < 5) this.sellerCubesList.get(i).setPrefWidth(30);
-            else this.sellerCubesList.get(i).setPrefWidth(this.cube.getEllenfelKockaiLista().get(i)*myWidther);
+            if ( this.cube.getEllenfelKockaiLista().get(i) < 5) 
+                this.sellerCubesList.get(i).setPrefWidth(30);
+            else 
+                this.sellerCubesList.get(i).setPrefWidth(this.cube.getEllenfelKockaiLista().get(i)*myWidther);
             this.sellerCubesList.get(i).setLayoutX(myLayoutX+650-this.sellerCubesList.get(i).getPrefWidth()/2);
             this.sellerCubesList.get(i).setText(this.cube.getEllenfelKockaiLista().get(i).toString());
             this.sellerCubesList.get(i).setEffect(new GaussianBlur());
         }
+
+        LOG.debug("módosult az ellenfél kockáinak megjelenése");
     }
     
     public void modifyRandomCube(){      
-        if ( this.cube.getCsereleshezKocka()< 5) this.randomCube.setPrefWidth(30);
-            else this.randomCube.setPrefWidth(this.selectedCube.getPrefWidth()*2/3);
-            this.randomCube.setLayoutX(myLayoutX+325-this.randomCube.getPrefWidth()/2);
-            this.randomCube.setText( "?" );
-            this.randomCube.setLayoutY(535);
-            this.randomCube.setDisable(false);
+        if ( this.cube.getCsereleshezKocka()< 5)
+            this.randomCube.setPrefWidth(30);
+        else
+            this.randomCube.setPrefWidth(this.selectedCube.getPrefWidth()*2/3);
+        this.randomCube.setLayoutX(myLayoutX+325-this.randomCube.getPrefWidth()/2);
+        this.randomCube.setText( "?" );
+        this.randomCube.setLayoutY(535);
+        this.randomCube.setDisable(false);
+            
+        LOG.debug("módosult a randomKocka gombjának megjelenése");
     }
     
     public void modifySelectedCube(){
@@ -163,6 +174,8 @@ public class FXMLController implements Initializable {
             this.selectedCube.setText( this.cube.getCsereleshezKocka().toString());
             this.selectedCube.setLayoutY(560);
             this.selectedCube.setDisable(false);
+
+        LOG.debug("módosult a cseréléshezKocka gombjának megjelenése");
     }
     
     public void gombActionCsereleshezGombon(ActionEvent ev){
@@ -170,6 +183,8 @@ public class FXMLController implements Initializable {
         this.selectedCube.setDisable(true);
         this.randomCube.setDisable(true);
         this.randomotKattintott= false;
+        
+        LOG.debug("játékos a cseréléshezKocka gombjára kattintott");
     }
     
     public void gombActionRandomGombon(ActionEvent ev){
@@ -183,13 +198,39 @@ public class FXMLController implements Initializable {
         randomCube.setText(cube.getRandomKocka().toString());
         
         randomotKattintott= true;
+        
+        LOG.debug("játékos a randomKocka gombjára kattintott");
     }
     
     public void gombActionSajatKockakGombokon(ActionEvent ev){
+        LOG.debug("játékos sajátKockáinak gomjai közül kattintott egyre");
+
         this.ownCubesList.stream().forEach(a -> a.setDisable(true));
         this.selectedCube.setDisable(false);
         this.randomCube.setDisable(false);
         
+        jatekosLep(ev);
+
+        modifyOwnCubesList();
+        modifySelectedCube();
+        modifyRandomCube();
+        
+        ownCubesList.forEach(a -> a.setDisable(true));
+        randomCube.setDisable(true);
+        selectedCube.setDisable(true);
+
+        LOG.debug("játékos lépett átadta a vezérlést a gépnek");
+        
+        ellenfel.lep(cube);
+        
+        modifySellerCubesList();
+        modifyOwnCubesList();
+        modifySelectedCube();
+        modifyRandomCube();
+
+        LOG.debug("ellenfél lépett visszaadta a vezérlést a játékosnak");
+    }
+    private void jatekosLep(ActionEvent ev){
         Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
         Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
         BuildPyramid mit; 
@@ -213,22 +254,6 @@ public class FXMLController implements Initializable {
             randomotKattintott= false;
         }
         emf.close();
-
-        modifyOwnCubesList();
-        modifySelectedCube();
-        modifyRandomCube();
-        
-        ownCubesList.forEach(a -> a.setDisable(true));
-        randomCube.setDisable(true);
-        selectedCube.setDisable(true);
-        
-        ellenfel.lep(cube);
-        
-        modifySellerCubesList();
-        modifyOwnCubesList();
-        modifySelectedCube();
-        modifyRandomCube();
-
     }
     
     private Integer sajatbanKeresiPoziciojat(Integer minek){
@@ -237,7 +262,9 @@ public class FXMLController implements Initializable {
             if( Integer.valueOf(ownCubesList.get(holvan).getText()) == minek)
                 break;
         
-        return holvan;
+         LOG.debug("megkerestük játékos melyik kockáára kattintott");
+
+         return holvan;
     }
     
     

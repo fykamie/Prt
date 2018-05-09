@@ -26,6 +26,9 @@ public class ReadyForStart {
     private Integer random;
     
     public Kockak makeReady(Kockak kockak){
+
+        LOG.debug("elkezdünk felkészülni a játékra");
+
         EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
         Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
@@ -91,6 +94,8 @@ public class ReadyForStart {
         kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
         ef.close();
+
+        LOG.debug("felállítottuk az adatbázist és kockákat kezdéshez");
         return kocku;
     }
     

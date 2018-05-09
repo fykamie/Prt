@@ -48,9 +48,11 @@ public class Ellenfel {
         }
         
 
+        LOG.debug("ellenfél megvizsgálta kategóriába esik-e");
     }
     
     private boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){
+        LOG.debug("ellenfél megvizsgálja intervallumba esik-e kapott kocka");
         for(int checker= alsoHatar; checker <= felsoHatar; checker++){
             if(ellenerozni == checker)
                 return true;
@@ -76,6 +78,7 @@ public class Ellenfel {
             kockak.setEgyKockaellenfelKockaibol(0, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);          
         }
+        LOG.debug("ellenfél cserélt kategóriában");
                   
     }
     
@@ -108,6 +111,7 @@ public class Ellenfel {
             kockak.setCsereleshezKocka(csereSeged);
         }
 
+        LOG.debug("ellenfél cserélt kategóriában");
         return kategoriaTagjai;
     }
     
@@ -117,6 +121,7 @@ public class Ellenfel {
             if(toBeMax > max)
                 max= toBeMax;
         }
+        LOG.debug("ellenfél maximumot keresett");
         return max;
     }
     
@@ -126,6 +131,7 @@ public class Ellenfel {
             if(toBeMax > min)
                 min= toBeMax;
         }
+        LOG.debug("ellenfél minimumot keresett");
         return min;
     }
 }
