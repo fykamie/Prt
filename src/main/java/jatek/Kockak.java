@@ -106,7 +106,7 @@ public class Kockak {
     public void swapRandomKockaEsCsereleshez(){
         int seged= randomKocka;
         randomKocka= csereleshezKocka;
-        csereleshezKocka= randomKocka;
+        csereleshezKocka= seged;
     }
         
     public boolean megvizsgalomSorbanVannakSajatKockaim(){

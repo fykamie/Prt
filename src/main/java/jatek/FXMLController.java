@@ -203,6 +203,7 @@ public class FXMLController implements Initializable {
             cube.swapRandomKockaEsCsereleshez();
             cube.setEgyKockaRandomKockakbol(randomPozicioja, cube.getRandomKocka());
             cube.swapCserelniEsSajatKockaim(holKattintott);
+            randomotKattintott= false;
         }
 
 
