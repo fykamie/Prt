@@ -22,15 +22,20 @@ public class Ellenfel {
         }
         
         for(int kategoriaIntervallum= 9; kategoriaIntervallum < 46; kategoriaIntervallum+= 7){
+            if(intervallumbaEsik(kockak.getCsereleshezKocka(), kategoriaIntervallum, kategoriaIntervallum+6)){
+                
+                csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex));
+                csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+1));
+                csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+2));
+                csereSeged= nagyobbKategoriakbanCserel(csereSeged, kockak);
+                kockak.setEgyKockaellenfelKockaibol(listaIndex, csereSeged.get(0));
+                kockak.setEgyKockaellenfelKockaibol(listaIndex+1, csereSeged.get(1));
+                kockak.setEgyKockaellenfelKockaibol(listaIndex+2, csereSeged.get(2));
+                csereSeged.clear();
             
-            csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex));
-            csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+1));
-            csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+2));
-            csereSeged= nagyobbKategoriakbanCserel(csereSeged, kockak);
-            kockak.setEgyKockaellenfelKockaibol(listaIndex, csereSeged.get(0));
-            kockak.setEgyKockaellenfelKockaibol(listaIndex+1, csereSeged.get(1));
-            kockak.setEgyKockaellenfelKockaibol(listaIndex+2, csereSeged.get(2));
-            csereSeged.clear();
+            }
+            
+            listaIndex+= 3;
         }
     }
     
