@@ -6,6 +6,7 @@ package jatek;
  * and open the template in the editor.
  */
 
+import adatbazis.BuildPyramid;
 import adatbazis.Lekerdezesek;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,7 +70,9 @@ public class FXMLController implements Initializable {
         batfarao.setFitWidth(screenWidth/6);
         batfarao.setLayoutX(primaryScreenBounds.getMinX()+screenWidth-batfarao.getFitWidth()-7);
         
-        cube= readyForStart.makeReady(cube);
+        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
+        cube= adatbaModosito.setTableForStart(emf);
+        emf.close();
         cube.setSajatKockaimLista(keveres.kever(cube.getSajatKockaimLista()));
         cube.setEllenfelKockaiLista(keveres.kever(cube.getEllenfelKockaiLista()));
         
@@ -110,12 +113,6 @@ public class FXMLController implements Initializable {
         pane.getChildren().add(ownPyramidTop);
         pane.getChildren().add(sellerPyramidTop);
         pane.getChildren().add(littlePyramidTop);
-        
-        System.out.println("sajat("+cube.getSajatKockaimLista().size()+"): "+ cube.getSajatKockaimLista());
-        System.out.println("ellenfel("+cube.getEllenfelKockaiLista().size()+"): "+ cube.getEllenfelKockaiLista());
-        System.out.println("random:("+cube.getRandomKockakLista().size()+") "+ cube.getRandomKockakLista());
-        System.out.println("gombok:("+ownCubesList.size()+") "+ ownCubesList);
-        System.out.println("labelek("+sellerCubesList.size()+"): "+ sellerCubesList);
         
         modifyOwnCubesList();
         modifySellerCubesList();
@@ -194,46 +191,38 @@ public class FXMLController implements Initializable {
         
         Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
         Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
+        BuildPyramid mit; 
+        BuildPyramid mivel; 
+        
+        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         if(!randomotKattintott){
+            adatbaModosito.adatbazisbanCserelCsereleshezEsSajatbolEgy(emf, cube.getCsereleshezKocka(), mitKattintott);
             cube.swapCserelniEsSajatKockaim(holKattintott);
-        }
-        else{
-            Integer randomPozicioja= randomKockakKozottKeresiPoziciojat(cube.getRandomKocka());
-            cube.swapRandomKockaEsCsereleshez();
-            cube.setEgyKockaRandomKockakbol(randomPozicioja, cube.getRandomKocka());
-            cube.swapCserelniEsSajatKockaim(holKattintott);
+            
+            
             randomotKattintott= false;
         }
+        else{
+            cube.setRandomKocka(cube.randomotDob());
+            cube.getRandomKockakLista().add(cube.getCsereleshezKocka());
+            adatbaModosito.adatbazisbanCserelRandomEsSajatbolEgy(emf, cube.getRandomKocka(), mitKattintott, cube.getCsereleshezKocka());
+            cube.swapEgyRandomEsSajatKockaim(holKattintott);
 
+            randomotKattintott= false;
+        }
+        emf.close();
 
         modifyOwnCubesList();
         modifySelectedCube();
         modifyRandomCube();
-//        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
-//            adatbaModosito.AdazbazisbaMentAllast(ef, cube);        
-//        ef.close();
 
-        ellenfel.ellenfelLep(cube);
-        
-        modifySellerCubesList();
-        modifySelectedCube();
-        modifyRandomCube();
     }
     
     private Integer sajatbanKeresiPoziciojat(Integer minek){
         int holvan;
         for(holvan= 0; holvan< ownCubesList.size(); holvan++)
             if( Integer.valueOf(ownCubesList.get(holvan).getText()) == minek)
-                break;
-        
-        return holvan;
-    }
-    
-    private Integer randomKockakKozottKeresiPoziciojat(Integer minek){
-        int holvan;
-        for(holvan= 0; holvan< cube.getRandomKockakLista().size(); holvan++)
-            if( cube.getRandomKockakLista().get(holvan) == minek)
                 break;
         
         return holvan;

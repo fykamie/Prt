@@ -7,13 +7,19 @@ package jatek;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author eszti
  */
-public class Ellenfel {
-    public void ellenfelLep( Kockak kockak ){
+public class Ellenfel { 
+    public void ellenfelLep( Kockak kockak, EntityManagerFactory emf ){
+//        if(!emf.isOpen())
+//            emf= Persistence.createEntityManagerFactory("databaseConnection");
+        
+        AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
         List<Integer> csereSeged= new ArrayList<>();
         Integer listaIndex= 2;
         
@@ -37,6 +43,8 @@ public class Ellenfel {
             
             listaIndex+= 3;
         }
+        
+
     }
     
     private boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){

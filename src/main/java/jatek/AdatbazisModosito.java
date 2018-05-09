@@ -10,6 +10,8 @@ import adatbazis.Lekerdezesek;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -17,6 +19,7 @@ import javax.persistence.Persistence;
  */
 public class AdatbazisModosito {
         
+    private Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     public void mindentKiNullaz(EntityManagerFactory emf){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
@@ -33,7 +36,7 @@ public class AdatbazisModosito {
         }
     }
     
-    public void setTableForStart(EntityManagerFactory emf){        
+    public Kockak setTableForStart(EntityManagerFactory emf){        
      
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
@@ -70,54 +73,38 @@ public class AdatbazisModosito {
         cserelendoKockaRekord.setKihezTartozik(4);
         lekerdezes.insert(cserelendoKockaRekord);
         
+        return kocka;
     }
     
-    public void AdazbazisbaMentAllast(EntityManagerFactory emf, Kockak kockak){
+    public void adatbazisbanCserelCsereleshezEsSajatbolEgy(EntityManagerFactory emf, Integer csereleshez, Integer sajatbolEgy){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         Lekerdezesek lekerdezes= new Lekerdezesek(emf);
-        Kockak myKocka= kockak;
         
-        myKocka.getSajatKockaimLista().forEach(berakando -> {
-            BuildPyramid toBeInsert= lekerdezes.getByID(berakando);
-            toBeInsert.setKihezTartozik(1);
-            lekerdezes.insert(toBeInsert);
-        });
+        BuildPyramid seged1= lekerdezes.getByID(csereleshez);
+//        LOG.debug(csereleshez+"csere elott csereleshez( "+seged1+" ) kihez tartozik: "+ seged1.getKihezTartozik());
+        seged1.setKihezTartozik(1);
+        lekerdezes.insert(seged1);
+//        LOG.debug(csereleshez+"csere utan csereleshez( "+seged1+" ) kihez tartozik: "+ seged1.getKihezTartozik());
+        BuildPyramid seged2= lekerdezes.getByID(sajatbolEgy);
+//        LOG.debug(sajatbolEgy+"csere elott sajatbolEgy( "+seged1+" ) kihez tartozik: "+ seged1.getKihezTartozik());
+        seged2.setKihezTartozik(4);
+        lekerdezes.insert(seged2);
+//        LOG.debug(sajatbolEgy+"csere utan sajatbolEgy( "+seged2+" ) kihez tartozik: "+ seged2.getKihezTartozik());
         
-        myKocka.getEllenfelKockaiLista().forEach(berakando -> {
-            BuildPyramid toBeInsert= lekerdezes.getByID(berakando);
-            toBeInsert.setKihezTartozik(2);
-            lekerdezes.insert(toBeInsert);
-        });
-        
-        myKocka.getRandomKockakLista().forEach(berakando -> {
-            BuildPyramid toBeInsert= lekerdezes.getByID(berakando);
-            toBeInsert.setKihezTartozik(3);
-            lekerdezes.insert(toBeInsert);
-        });
-        
-        BuildPyramid berakando= lekerdezes.getByID(myKocka.getCsereleshezKocka());
-        berakando.setKihezTartozik(4);
     }
     
-    public Kockak AdatbasibolKiszediAllast(EntityManagerFactory emf){
+    public void adatbazisbanCserelRandomEsSajatbolEgy(EntityManagerFactory emf, Integer randombolEgy, Integer sajatbolEgy, Integer eldobott){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         Lekerdezesek lekerdezes= new Lekerdezesek(emf);
-        Kockak myKocka= new Kockak();
-                
-        List<BuildPyramid> sajatom= lekerdezes.get(a -> a.getKihezTartozik() == 1);
-        List<BuildPyramid> ellenfel= lekerdezes.get(a -> a.getKihezTartozik() == 2);
-        List<BuildPyramid> random= lekerdezes.get(a -> a.getKihezTartozik() == 3);
-        List<BuildPyramid> csereleshez= lekerdezes.get(a -> a.getKihezTartozik() == 4);
         
-        sajatom.forEach(a -> myKocka.getSajatKockaimLista().add(a.getKockak()));
-        ellenfel.forEach(a -> myKocka.getEllenfelKockaiLista().add(a.getKockak()));
-        random.forEach(a -> myKocka.getRandomKockakLista().add(a.getKockak()));
-        myKocka.setCsereleshezKocka(csereleshez.get(0).getKockak());
+        BuildPyramid seged= lekerdezes.getByID(eldobott);
+        adatbazisbanCserelCsereleshezEsSajatbolEgy(emf, randombolEgy, sajatbolEgy);
         
-        return myKocka;
+        seged.setKihezTartozik(3);
+        lekerdezes.insert(seged);
     }
 }

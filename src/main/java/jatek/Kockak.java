@@ -93,7 +93,7 @@ public class Kockak {
     
     public void swapEgyRandomEsSajatKockaim(Integer hol){
         int seged= randomKocka;
-        randomKocka= sajatKockaimLista.get(hol);
+        csereleshezKocka= sajatKockaimLista.get(hol);
         sajatKockaimLista.set(hol, seged);
     }
     
@@ -131,7 +131,7 @@ public class Kockak {
         while( randomKockakLista.get(random) == csereleshezKocka )
             random= rn.nextInt(randomKockakLista.size());
         
-        return randomKockakLista.get(random);
+        return randomKockakLista.remove(random);
     }
     
 }

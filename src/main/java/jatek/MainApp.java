@@ -1,5 +1,6 @@
 package jatek;
 
+import adatbazis.Lekerdezesek;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 
 public class MainApp extends Application {
@@ -43,7 +46,13 @@ public class MainApp extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        
+//        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
+//        AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
+//        adatbazisModosito.setTableForStart(emf);
+//        
+//        Lekerdezesek lek= new Lekerdezesek(emf);
+//        
+//        System.out.println("csereleshezKocka adatban: " + lek.get(a -> a.getKihezTartozik() == 4));
 
 
     }
