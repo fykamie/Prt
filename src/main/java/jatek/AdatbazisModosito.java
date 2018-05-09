@@ -30,6 +30,7 @@ public class AdatbazisModosito {
         if(!adatbazisbanVannak.isEmpty())
             lekerdezes.deleteAll();
 
+        LOG.debug("adatbázisban kitörölte az összes rekordot");
     }
         
     public void adatbazisbanCserelCsereleshezEsSajatbolEgy(EntityManagerFactory emf, Integer csereleshez, Integer sajatbolEgy){

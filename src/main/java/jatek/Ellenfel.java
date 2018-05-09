@@ -9,12 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author eszti
  */
-public class Ellenfel { 
+public class Ellenfel {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
+
     public void lep( Kockak kockak){
         EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
         

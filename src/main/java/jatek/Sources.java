@@ -5,11 +5,15 @@
  */
 package jatek;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author eszti
  */
 public class Sources {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private int mySource= 1000;
     
     public int getMySource() {

@@ -5,11 +5,15 @@
  */
 package jatek;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author eszti
  */
 public class EndGame {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     public boolean isEndGame(Kockak kockak){
         if( kockak.megvizsgalomSorbanVannakEllenfelKockai() || kockak.megvizsgalomSorbanVannakSajatKockaim() )
             return true;

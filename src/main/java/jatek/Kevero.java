@@ -7,12 +7,15 @@ package jatek;
 
 import java.util.List;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author eszti
  */
 public class Kevero {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private static Random rn= new Random();
     
     public static List<Integer> kever(List<Integer> keverendo){

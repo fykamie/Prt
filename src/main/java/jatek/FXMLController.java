@@ -21,6 +21,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FXML Controller class
@@ -28,6 +30,7 @@ import javax.persistence.Persistence;
  * @author eszti
  */
 public class FXMLController implements Initializable {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     
     @FXML
     private Pane pane;

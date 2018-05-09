@@ -13,12 +13,15 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author eszti
  */
 public class ReadyForStart {
+    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private final Random rn= new Random();
     private Integer random;
     
