@@ -109,7 +109,13 @@ public class FXMLController implements Initializable {
         pane.getChildren().add(ownPyramidTop);
         pane.getChildren().add(sellerPyramidTop);
         pane.getChildren().add(littlePyramidTop);
-
+        
+        System.out.println("sajat("+cube.getSajatKockaimLista().size()+"): "+ cube.getSajatKockaimLista());
+        System.out.println("ellenfel("+cube.getEllenfelKockaiLista().size()+"): "+ cube.getEllenfelKockaiLista());
+        System.out.println("random:("+cube.getRandomKockakLista().size()+") "+ cube.getRandomKockakLista());
+        System.out.println("gombok:("+ownCubesList.size()+") "+ ownCubesList);
+        System.out.println("labelek("+sellerCubesList.size()+"): "+ sellerCubesList);
+        
         modifyOwnCubesList();
         modifySellerCubesList();
         modifyRandomCube();
