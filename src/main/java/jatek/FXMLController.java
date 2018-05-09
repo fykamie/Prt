@@ -52,6 +52,7 @@ public class FXMLController implements Initializable {
 
     private ArrayList<Label> sellerCubesList;
     private Kockak cube= new Kockak();
+    private final Ellenfel ellenfel= new Ellenfel();
     private final AdatbazisModosito adatbaModosito= new AdatbazisModosito();
     private final Kevero keveres= new Kevero();
     private final ReadyForStart readyForStart= new ReadyForStart();
@@ -193,18 +194,13 @@ public class FXMLController implements Initializable {
         
         Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
         Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
-        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
-//        Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
         if(!randomotKattintott){
             cube.swapCserelniEsSajatKockaim(holKattintott);
-            adatbaModosito.swapSajatEsCsereleshez(ef, mitKattintott);
         }
         else{
             Integer randomPozicioja= randomKockakKozottKeresiPoziciojat(cube.getRandomKocka());
-            adatbaModosito.swapRandomEsCsereleshez(ef, cube.getRandomKocka());
             cube.swapRandomKockaEsCsereleshez();
-            adatbaModosito.swapSajatEsCsereleshez(ef, mitKattintott);
             cube.setEgyKockaRandomKockakbol(randomPozicioja, cube.getRandomKocka());
             cube.swapCserelniEsSajatKockaim(holKattintott);
         }
@@ -213,9 +209,15 @@ public class FXMLController implements Initializable {
         modifyOwnCubesList();
         modifySelectedCube();
         modifyRandomCube();
+//        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
+//            adatbaModosito.AdazbazisbaMentAllast(ef, cube);        
+//        ef.close();
+
+        ellenfel.ellenfelLep(cube);
         
-        ef.close();
-        
+        modifySellerCubesList();
+        modifySelectedCube();
+        modifyRandomCube();
     }
     
     private Integer sajatbanKeresiPoziciojat(Integer minek){
