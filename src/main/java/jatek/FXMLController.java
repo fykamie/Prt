@@ -7,18 +7,25 @@ package jatek;
  */
 
 import adatbazis.BuildPyramid;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.slf4j.Logger;
@@ -56,6 +63,7 @@ public class FXMLController implements Initializable {
     private ArrayList<Label> sellerCubesList;
     private Kockak cube= new Kockak();
     private final Ellenfel ellenfel= new Ellenfel();
+    private final Sources pontjaim= new Sources();
     private final AdatbazisModosito adatbaModosito= new AdatbazisModosito();
     private final Kevero keveres= new Kevero();
     private final ReadyForStart readyForStart= new ReadyForStart();
@@ -134,6 +142,8 @@ public class FXMLController implements Initializable {
         this.randomCube.setDisable(false);
         
         jatekosLep(ev);
+        pontjaim.minusz5();
+        LOG.debug("játékos lépése után pontjaiból elvettem 5-t");
 
         modifyOwnCubesList();
         modifySelectedCube();
@@ -144,12 +154,27 @@ public class FXMLController implements Initializable {
         selectedCube.setDisable(true);
         
         if( EndGame.isEndGame(cube)){
+            sellerCubesList.forEach(a -> a.setDisable(false));
+            
             Button but= new Button();
             Label lab= new Label();
             
             but.setText("Újra");
+            but.setAlignment(Pos.CENTER);
+            but.setBackground(Background.EMPTY);
+            but.setOnAction(uev -> {
+                try {
+                    ujraKezdjuk(uev);
+                } catch (IOException ex) {
+                    LOG.debug("Nem tudtuk újrakezdeni");
+                }
+            });
             lab.setText(EndGame.kiNyert(cube));
+            lab.setAlignment(Pos.CENTER);
+            lab.setBackground(Background.EMPTY);
 
+            pane.getChildren().add(lab);
+            pane.getChildren().add(but);
             LOG.debug("A játék véget ért");
         }
         else{
@@ -158,14 +183,28 @@ public class FXMLController implements Initializable {
             ellenfel.lep(cube);
             
             if( EndGame.isEndGame(cube)){
-                
+                sellerCubesList.forEach(a -> a.setDisable(false));
+            
                 Button but= new Button();
                 Label lab= new Label();
-            
+
                 but.setText("Újra");
+                but.setAlignment(Pos.CENTER);
+                but.setBackground(Background.EMPTY);
+                but.setOnAction(uev -> {
+                    try {
+                        ujraKezdjuk(uev);
+                    } catch (IOException ex) {
+                        LOG.debug("Nem tudtuk újrakezdeni");
+                    }
+                });
                 lab.setText(EndGame.kiNyert(cube));
-            
-            LOG.debug("A játék véget ért");
+                lab.setAlignment(Pos.CENTER);
+                lab.setBackground(Background.EMPTY);
+
+                pane.getChildren().add(lab);
+                pane.getChildren().add(but);
+                LOG.debug("A játék véget ért");
             }
             else{
                 modifySellerCubesList();
@@ -202,11 +241,20 @@ public class FXMLController implements Initializable {
 
             randomotKattintott= false;
         }
+        if(cube.getSajatKockaimLista().get(holKattintott+1).equals(mitKattintott+1) 
+                || cube.getSajatKockaimLista().get(holKattintott-1).equals(mitKattintott-1)){
+            pontjaim.plusz15();
+
+            LOG.debug("pontokhoz hozzáadtunk 15-t játékos lépése után");
+        }
 
         LOG.debug("játékos lépését véglegesítjük");
         emf.close();
     }
-    
+
+    private void pontokatAllit(Integer hovaRakott, Integer mitRakott){
+        
+    }
     private void gombActionRandomGombon(ActionEvent ev){
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
         this.selectedCube.setDisable(true);
@@ -294,5 +342,25 @@ public class FXMLController implements Initializable {
          return holvan;
     }
     
-    
+    private void ujraKezdjuk(ActionEvent ev) throws IOException{
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage= (Stage) this.batfarao.getScene().getWindow();
+        
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/styles/Styles.css");
+        javafx.geometry.Rectangle2D primaryScreenBounds= Screen.getPrimary().getVisualBounds();
+        
+        stage.setX(primaryScreenBounds.getMinX());
+        stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth(primaryScreenBounds.getWidth());
+        stage.setHeight(primaryScreenBounds.getHeight());
+        stage.setResizable(false);
+
+        stage.setTitle("JavaFX and Maven");
+        stage.setScene(scene);
+        
+        fxmlLoader.<FXMLController>getController().afterInitialize();
+        stage.show();
+    }
 }

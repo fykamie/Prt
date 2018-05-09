@@ -26,9 +26,9 @@ public class Sources {
         return mySource-= 5;
     }
     
-    public int plusz10(){
-        LOG.debug("nőtt a pontszám tízzel");
+    public int plusz15(){
+        LOG.debug("nőtt a pontszám tizenöttel");
 
-        return mySource+= 10;
+        return mySource+= 15;
     }
 }
