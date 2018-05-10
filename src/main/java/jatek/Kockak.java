@@ -5,9 +5,12 @@
  */
 package jatek;
 
+import adatbazis.Lekerdezesek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -20,6 +23,8 @@ public class Kockak {
     private List<Integer> randomKockakLista= new ArrayList<>();
     private Integer csereleshezKocka;
     private Integer randomKocka;
+    private final EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
+    
 
     public Integer getRandomKocka() {
         return randomKocka;
@@ -77,12 +82,16 @@ public class Kockak {
         int seged= this.csereleshezKocka;
         csereleshezKocka= this.sajatKockaimLista.get(hol);
         this.sajatKockaimLista.set(hol, seged);
+        
+        
     }
     
     public void swapCserelniEsEllenfelKockai(Integer hol){
         int seged= this.csereleshezKocka;
         csereleshezKocka= this.ellenfelKockaiLista.get(hol);
         this.ellenfelKockaiLista.set(hol, seged);
+        
+        
     }
     
     public void swapCserelniEsRandomKockak(Integer hol){
@@ -134,4 +143,29 @@ public class Kockak {
         return randomKockakLista.remove(random);
     }
     
+    public boolean isAdatbazisEmpty(){
+        return new Lekerdezesek(emf).getAll().isEmpty();
+    }
+    
+    public void adatbazisbaMent(){
+        AdatbazisModosito.kockakAdatbazisbaMentese(emf, this);
+    }
+    
+    public Kockak datbazisbolKiszedi(){
+        Kockak kocka= new Kockak();
+        kocka.setCsereleshezKocka(AdatbazisModosito.csereleshezKockaAdatbazisbol(emf));
+        kocka.setRandomKockakLista(AdatbazisModosito.randomKockakAdatbazisbol(emf));
+        kocka.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(emf));
+        kocka.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(emf));
+        
+        return kocka;
+    }
+    
+    public void adatbazisRekordokTorlese(){
+        AdatbazisModosito.mindentKiNullaz(emf);
+    }
+    
+    public void closeConnect(){
+        emf.close();
+    }
 }

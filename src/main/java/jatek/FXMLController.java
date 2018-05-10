@@ -7,11 +7,11 @@ package jatek;
  */
 
 import adatbazis.BuildPyramid;
-import adatbazis.Lekerdezesek;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,8 +27,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +57,7 @@ public class FXMLController implements Initializable {
     private final Double screenWidth= primaryScreenBounds.getWidth();
     private final Double screenHeight= primaryScreenBounds.getHeight();
 
+
     private ArrayList<Button> ownCubesList;
 
     private ArrayList<Label> sellerCubesList;
@@ -76,11 +75,16 @@ public class FXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {}
 
     public void afterInitialize(){
-
+        Stage stage= (Stage) batfarao.getScene().getWindow();
+        stage.setOnCloseRequest(e -> {
+            cube.closeConnect();
+            Platform.exit();
+        });
+        
         batfarao.setFitHeight(screenHeight);
         batfarao.setFitWidth(screenWidth/6);
         batfarao.setLayoutX(primaryScreenBounds.getMinX()+screenWidth-batfarao.getFitWidth()-7);
-        
+
         cube= readyForStart.makeReady(cube);
 
         cube.setSajatKockaimLista(Kevero.kever(cube.getSajatKockaimLista()));
@@ -132,7 +136,7 @@ public class FXMLController implements Initializable {
         randomCube.setOnAction( (ev) -> gombActionRandomGombon(ev) );
         selectedCube.setOnAction( (ev) -> gombActionCsereleshezGombon(ev) );
 
-        LOG.debug("játékhoz be- és felállítottuk a képernyőt");
+        LOG.debug("új játékhoz be- és felállítottuk a képernyőt");
     }
     
     public void gombActionSajatKockakGombokon(ActionEvent ev){
@@ -184,15 +188,15 @@ public class FXMLController implements Initializable {
 
             pane.getChildren().add(lab);
             pane.getChildren().add(but);
+            
+            cube.adatbazisRekordokTorlese();
             LOG.debug("A játék véget ért");
         }
         else{
             LOG.debug("játékos lépett átadta a vezérlést a gépnek");
 
             ellenfel.lep(cube);
-            EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
-                adatbaModosito.adatbazisbaMenitEllenfel(emf, cube);
-            emf.close();
+            cube.adatbazisbaMent();
             if( EndGame.isEndGame(cube)){
                 sellerCubesList.forEach(a -> a.setDisable(false));
             
@@ -215,6 +219,8 @@ public class FXMLController implements Initializable {
 
                 pane.getChildren().add(lab);
                 pane.getChildren().add(but);
+                
+                cube.adatbazisRekordokTorlese();
                 LOG.debug("A játék véget ért");
             }
             else{
@@ -235,19 +241,15 @@ public class FXMLController implements Initializable {
         BuildPyramid mit; 
         BuildPyramid mivel; 
         
-        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         if(!randomotKattintott){
-            adatbaModosito.adatbazisbanCserelCsereleshezEsSajatbolEgy(emf, cube.getCsereleshezKocka(), mitKattintott);
             cube.swapCserelniEsSajatKockaim(holKattintott);
-            
-            
+          
             randomotKattintott= false;
         }
         else{
             cube.setRandomKocka(cube.randomotDob());
             cube.getRandomKockakLista().add(cube.getCsereleshezKocka());
-            adatbaModosito.adatbazisbanCserelRandomEsSajatbolEgy(emf, cube.getRandomKocka(), mitKattintott, cube.getCsereleshezKocka());
             cube.swapEgyRandomEsSajatKockaim(holKattintott);
 
             randomotKattintott= false;
@@ -260,7 +262,6 @@ public class FXMLController implements Initializable {
         }
 
         LOG.debug("játékos lépését véglegesítjük");
-        emf.close();
     }
 
     private void pontokatAllit(Integer hovaRakott, Integer mitRakott){
@@ -356,12 +357,11 @@ public class FXMLController implements Initializable {
     private void ujraKezdjuk(ActionEvent ev) throws IOException{
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
         Parent root = fxmlLoader.load();
-        Stage stage= (Stage) this.batfarao.getScene().getWindow();
-        
+
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        javafx.geometry.Rectangle2D primaryScreenBounds= Screen.getPrimary().getVisualBounds();
         
+        Stage stage= (Stage) batfarao.getScene().getWindow();
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());

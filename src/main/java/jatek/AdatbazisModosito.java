@@ -7,6 +7,7 @@ package jatek;
 
 import adatbazis.BuildPyramid;
 import adatbazis.Lekerdezesek;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -19,9 +20,9 @@ import org.slf4j.LoggerFactory;
  */
 public class AdatbazisModosito {
         
-    private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
+    private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     
-    public void mindentKiNullaz(EntityManagerFactory emf){
+    public static void mindentKiNullaz(EntityManagerFactory emf){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
         
@@ -33,50 +34,65 @@ public class AdatbazisModosito {
         LOG.debug("adatbázisban kitörölte az összes rekordot");
     }
         
-    public void adatbazisbanCserelCsereleshezEsSajatbolEgy(EntityManagerFactory emf, Integer csereleshez, Integer sajatbolEgy){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
+    public static void kockakAdatbazisbaMentese( EntityManagerFactory emf, Kockak kockak ){
+        Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
-        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
-        
-        BuildPyramid seged1= lekerdezes.getByID(csereleshez);
-        seged1.setKihezTartozik(1);
-        lekerdezes.insert(seged1);
-
-        BuildPyramid seged2= lekerdezes.getByID(sajatbolEgy);
-        seged2.setKihezTartozik(4);
-        lekerdezes.insert(seged2);
-        LOG.debug("adatbázisban cserélte a cseréléshez kockát és kiválasztott kockát");
-        
-    }
-    
-    public void adatbazisbaMenitEllenfel(EntityManagerFactory emf, Kockak kockak){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
-        
-        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
-        
-        kockak.getEllenfelKockaiLista().forEach(a -> {
-            BuildPyramid breakando= lekerdezes.getByID(a);
-            breakando.setKihezTartozik(3);
-            lekerdezes.insert(breakando);
+        kockak.getSajatKockaimLista().forEach(a -> {
+            BuildPyramid berakni= lekerdezesek.getByID(a);
+            berakni.setKihezTartozik(1);
+            lekerdezesek.insert(berakni);
         });
-            
-        LOG.debug("adatbázisba mentettem az ellen kockáit");
+
+        kockak.getEllenfelKockaiLista().forEach(a -> {
+            BuildPyramid berakni= lekerdezesek.getByID(a);
+            berakni.setKihezTartozik(2);
+            lekerdezesek.insert(berakni);
+        });
+
+        kockak.getRandomKockakLista().forEach(a -> {
+            BuildPyramid berakni= lekerdezesek.getByID(a);
+            berakni.setKihezTartozik(3);
+            lekerdezesek.insert(berakni);
+        });
         
+        BuildPyramid berakni= lekerdezesek.getByID(kockak.getCsereleshezKocka());
+        berakni.setKihezTartozik(4);
+        lekerdezesek.insert(berakni);
+
+        LOG.debug("adatbázisba mentette az állást");
     }
     
-    public void adatbazisbanCserelRandomEsSajatbolEgy(EntityManagerFactory emf, Integer randombolEgy, Integer sajatbolEgy, Integer eldobott){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
+    public static List<Integer> sajatKockakAdatbazisbol(EntityManagerFactory emf){
+        Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
+        List<Integer> visszaTer= new ArrayList<>();
+        lekerdezesek.get(a -> a.getKihezTartozik() == 1).forEach(a -> visszaTer.add(a.getKockak()));
+
+        LOG.debug("adatbázisból saját kockák");
+        return visszaTer;        
+    }
+    
+    public static List<Integer> ellenfelKockakAdatbazisbol(EntityManagerFactory emf){
+        Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
+        List<Integer> visszaTer= new ArrayList<>();
+        lekerdezesek.get(a -> a.getKihezTartozik() == 2).forEach(a -> visszaTer.add(a.getKockak()));
+
+        LOG.debug("adatbázisból ellenfel kockák");
+        return visszaTer;        
+    }
+    
+    public static List<Integer> randomKockakAdatbazisbol(EntityManagerFactory emf){
+        Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
+        List<Integer> visszaTer= new ArrayList<>();
+        lekerdezesek.get(a -> a.getKihezTartozik() == 3).forEach(a -> visszaTer.add(a.getKockak()));
+
+        LOG.debug("adatbázisból random kockák");
+        return visszaTer;        
+    }
+    
+    public static Integer csereleshezKockaAdatbazisbol(EntityManagerFactory emf){
+        Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
-        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
-        
-        BuildPyramid seged= lekerdezes.getByID(eldobott);
-        adatbazisbanCserelCsereleshezEsSajatbolEgy(emf, randombolEgy, sajatbolEgy);
-        
-        seged.setKihezTartozik(3);
-        lekerdezes.insert(seged);
-        LOG.debug("adatbázisban cserélte a kapott random kockát és választott kockát");
+        LOG.debug("adatbázisból random kockák");
+        return lekerdezesek.get(a -> a.getKihezTartozik() == 4).get(0).getKockak();
     }
 }

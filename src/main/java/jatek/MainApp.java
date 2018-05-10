@@ -31,7 +31,7 @@ public class MainApp extends Application {
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         
- //       fxmlLoader.<FXMLController>getController().afterInitialize();
+        fxmlLoader.<FXMLController>getController().afterInitialize();
         stage.show();
     }
 
@@ -45,17 +45,7 @@ public class MainApp extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        Ellenfel el= new Ellenfel();
-        Kockak kockak= new Kockak();
 
-        kockak.setCsereleshezKocka(5);
-        kockak.setSajatKockaimLista(Arrays.asList(35, 22, 21, 20, 19, 18, 17, 16, 29, 33, 47, 11, 10, 39, 8, 32, 36, 38, 45, 1));
-        kockak.setEllenfelKockaiLista(Arrays.asList(26, 25, 31, 13, 7, 46, 34, 48, 49, 50, 30, 2, 3, 4, 7, 9, 13, 25, 28, 31));
-        kockak.setRandomKockakLista(Arrays.asList(15, 14, 23, 12, 42, 24, 44, 6, 27));
-        
-        List<Integer> vizsgalandoKategoriaTagjai= Arrays.asList(12, 10,  15);
-        
-        System.out.println("ellenfel: "+ el.nagyobbKategoriakbanCserel(vizsgalandoKategoriaTagjai, kockak));
 
     }
 
