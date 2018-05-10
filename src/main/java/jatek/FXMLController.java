@@ -7,6 +7,7 @@ package jatek;
  */
 
 import adatbazis.BuildPyramid;
+import adatbazis.Lekerdezesek;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -160,7 +161,10 @@ public class FXMLController implements Initializable {
             Label lab= new Label();
             
             but.setText("Újra");
-            but.setAlignment(Pos.CENTER);
+            but.setPrefHeight(80);
+            but.setPrefWidth(100);
+            but.setLayoutX(screenWidth/2);
+            but.setLayoutY(screenHeight/2);
             but.setBackground(Background.EMPTY);
             but.setOnAction(uev -> {
                 try {
@@ -169,6 +173,11 @@ public class FXMLController implements Initializable {
                     LOG.debug("Nem tudtuk újrakezdeni");
                 }
             });
+            
+            lab.setPrefHeight(80);
+            lab.setPrefWidth(100);
+            lab.setLayoutX(screenWidth/2);
+            lab.setLayoutY(screenHeight/2 - 90);
             lab.setText(EndGame.kiNyert(cube));
             lab.setAlignment(Pos.CENTER);
             lab.setBackground(Background.EMPTY);
@@ -181,7 +190,9 @@ public class FXMLController implements Initializable {
             LOG.debug("játékos lépett átadta a vezérlést a gépnek");
 
             ellenfel.lep(cube);
-            
+            EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
+                adatbaModosito.adatbazisbaMenitEllenfel(emf, cube);
+            emf.close();
             if( EndGame.isEndGame(cube)){
                 sellerCubesList.forEach(a -> a.setDisable(false));
             

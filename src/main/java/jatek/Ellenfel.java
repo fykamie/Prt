@@ -7,8 +7,6 @@ package jatek;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,14 +18,13 @@ public class Ellenfel {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
 
     public void lep( Kockak kockak){
-        EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
         List<Integer> csereSeged= new ArrayList<>();
         Integer listaIndex= 2;
         
         if(kockak.getCsereleshezKocka()< 9){
-            elsoKategoriabanCserel(kockak, emf);
+            elsoKategoriabanCserel( kockak );
         }
         
         for(int kategoriaIntervallum= 9; kategoriaIntervallum < 46; kategoriaIntervallum+= 7){
@@ -36,7 +33,7 @@ public class Ellenfel {
                 csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex));
                 csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+1));
                 csereSeged.add(kockak.getEllenfelKockaiLista().get(listaIndex+2));
-                csereSeged= nagyobbKategoriakbanCserel(emf, csereSeged, kockak);
+                csereSeged= nagyobbKategoriakbanCserel(csereSeged, kockak);
                 kockak.setEgyKockaellenfelKockaibol(listaIndex, csereSeged.get(0));
                 kockak.setEgyKockaellenfelKockaibol(listaIndex+1, csereSeged.get(1));
                 kockak.setEgyKockaellenfelKockaibol(listaIndex+2, csereSeged.get(2));
@@ -46,12 +43,9 @@ public class Ellenfel {
             
             listaIndex+= 3;
         }
-        
-
-        LOG.debug("ellenfél megvizsgálta kategóriába esik-e");
     }
     
-    private boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){
+    public boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){
         LOG.debug("ellenfél megvizsgálja intervallumba esik-e kapott kocka");
         for(int checker= alsoHatar; checker <= felsoHatar; checker++){
             if(ellenerozni == checker)
@@ -61,20 +55,15 @@ public class Ellenfel {
         return false;
     }
     
-    private void elsoKategoriabanCserel( Kockak kockak, EntityManagerFactory emf ){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
+    public void elsoKategoriabanCserel( Kockak kockak ){
         int csereSeged;
-        AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
         if( kockak.getCsereleshezKocka()> kockak.getEllenfelKockaiLista().get(0) ){
             csereSeged= kockak.getEllenfelKockaiLista().get(1);
-            adatbazisModosito.adatbazisbanCserelCsereleshezEsEllenfelbolEgy(emf, kockak.getCsereleshezKocka(), csereSeged);
             kockak.setEgyKockaellenfelKockaibol(1, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);          
         }
         else{
             csereSeged= kockak.getEllenfelKockaiLista().get(0);
-            adatbazisModosito.adatbazisbanCserelCsereleshezEsEllenfelbolEgy(emf, kockak.getCsereleshezKocka(), csereSeged);
             kockak.setEgyKockaellenfelKockaibol(0, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);          
         }
@@ -82,31 +71,27 @@ public class Ellenfel {
                   
     }
     
-    private List<Integer> nagyobbKategoriakbanCserel(EntityManagerFactory  emf, List<Integer> kategoriaTagjai, Kockak kockak){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
-        List<Integer> csereSegedLista= kategoriaTagjai;
+    public List<Integer> nagyobbKategoriakbanCserel(List<Integer> kategoriaTagjai, Kockak kockak){
+        
+        List<Integer> csereSegedLista= new ArrayList<>();
+        csereSegedLista.addAll(kategoriaTagjai);
         csereSegedLista.add(kockak.getCsereleshezKocka());
         int max= getMax(csereSegedLista);
         int min= getMin(csereSegedLista);
         int csereSeged;
-        AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
         
         if( kockak.getCsereleshezKocka()== max ){
             csereSeged= kategoriaTagjai.get(2);
-            adatbazisModosito.adatbazisbanCserelCsereleshezEsEllenfelbolEgy(emf, kockak.getCsereleshezKocka(), csereSeged);
             kategoriaTagjai.set(2, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);
         }
         else if( kockak.getCsereleshezKocka()== min ){
             csereSeged= kategoriaTagjai.get(0);
-            adatbazisModosito.adatbazisbanCserelCsereleshezEsEllenfelbolEgy(emf, kockak.getCsereleshezKocka(), csereSeged);
             kategoriaTagjai.set(0, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);
         }
         else{
             csereSeged= kategoriaTagjai.get(1);
-            adatbazisModosito.adatbazisbanCserelCsereleshezEsEllenfelbolEgy(emf, kockak.getCsereleshezKocka(), csereSeged);
             kategoriaTagjai.set(1, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);
         }
@@ -115,8 +100,8 @@ public class Ellenfel {
         return kategoriaTagjai;
     }
     
-    private Integer getMax(List<Integer> keresendo){
-        int max= 0;
+    public Integer getMax(List<Integer> keresendo){
+        int max= keresendo.get(0);
         for( Integer toBeMax : keresendo ){
             if(toBeMax > max)
                 max= toBeMax;
@@ -125,11 +110,11 @@ public class Ellenfel {
         return max;
     }
     
-    private Integer getMin(List<Integer> keresendo){
-        int min= 0;
-        for( Integer toBeMax : keresendo ){
-            if(toBeMax > min)
-                min= toBeMax;
+    public Integer getMin(List<Integer> keresendo){
+        int min= keresendo.get(0);
+        for( Integer toBeMin : keresendo ){
+            if(toBeMin < min)
+                min= toBeMin;
         }
         LOG.debug("ellenfél minimumot keresett");
         return min;

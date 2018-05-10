@@ -50,20 +50,19 @@ public class AdatbazisModosito {
         
     }
     
-    public void adatbazisbanCserelCsereleshezEsEllenfelbolEgy(EntityManagerFactory emf, Integer csereleshez, Integer ellenfelbolEgy){
+    public void adatbazisbaMenitEllenfel(EntityManagerFactory emf, Kockak kockak){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
         
         Lekerdezesek lekerdezes= new Lekerdezesek(emf);
         
-        BuildPyramid seged1= lekerdezes.getByID(csereleshez);
-        seged1.setKihezTartozik(2);
-        lekerdezes.insert(seged1);
-
-        BuildPyramid seged2= lekerdezes.getByID(ellenfelbolEgy);
-        seged2.setKihezTartozik(4);
-        lekerdezes.insert(seged2);
-        LOG.debug("adatbázisban cserélte a cseréléshez kockát és ellenfélből egy kockát");
+        kockak.getEllenfelKockaiLista().forEach(a -> {
+            BuildPyramid breakando= lekerdezes.getByID(a);
+            breakando.setKihezTartozik(3);
+            lekerdezes.insert(breakando);
+        });
+            
+        LOG.debug("adatbázisba mentettem az ellen kockáit");
         
     }
     

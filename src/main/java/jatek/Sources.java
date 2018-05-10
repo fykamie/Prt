@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
 public class Sources {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private int mySource= 1000;
+
+    public void setMySource(int mySource) {
+        this.mySource = mySource;
+    }
     
     public int getMySource() {
         return mySource;
