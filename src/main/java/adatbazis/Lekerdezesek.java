@@ -23,6 +23,16 @@ public class Lekerdezesek implements LekerdezesekIF<BuildPyramid>{
     }
     
     /**
+     * Az osztály konstruktora.
+     * 
+     * @param em 
+     */
+    public Lekerdezesek(EntityManager em) {
+        ef= null;
+        this.em= em;
+    }
+    
+    /**
      * Adatbázisba illeszt be objektumot.
      * 
      * @param obj 

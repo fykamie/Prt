@@ -361,7 +361,7 @@ public class FXMLController implements Initializable {
             if( Integer.valueOf(ownCubesList.get(holvan).getText()) == minek)
                 break;
         
-         LOG.debug("megkerestük játékos melyik kockáára kattintott");
+         LOG.debug("holvan a kattintás= "+holvan);
 
          return holvan;
     }

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +22,9 @@ public class ReadyForStart {
      */
     public Kockak makeReady(Kockak kockak){
 
-        EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
-        Lekerdezesek lekerdezes= new Lekerdezesek(ef);
+        Lekerdezesek lekerdezes= new Lekerdezesek(kockak.getManager());
         
-        AdatbazisModosito.mindentKiNullaz(ef);
+        AdatbazisModosito.mindentKiNullaz(kockak.getManager());
         
         Kockak kocku = new Kockak();
         
@@ -90,8 +87,6 @@ public class ReadyForStart {
         
         kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
-        ef.close();
-
         LOG.debug("Elkészült kocka: "+kocku.toString());
         return kocku;
     }

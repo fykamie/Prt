@@ -9,6 +9,7 @@ import adatbazis.Lekerdezesek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -25,7 +26,24 @@ public class Kockak {
     private Integer randomKocka;
     private final Sources pontok= new Sources();
     private final EntityManagerFactory emf= Persistence.createEntityManagerFactory("databaseConnection");
+    private final EntityManager em;
 
+    /**
+     * Az osztály konstruktora.
+     */
+    public Kockak() {
+        em= emf.createEntityManager();
+    }
+    
+    /**
+     * em gettere.
+     * 
+     * @return 
+     */
+    public EntityManager getManager(){
+        return this.em;
+    }
+    
     /**
      * Álláshoz tartozó pontok gettere.
      * 
@@ -166,6 +184,10 @@ public class Kockak {
         int seged= this.csereleshezKocka;
         csereleshezKocka= this.sajatKockaimLista.get(hol);
         this.sajatKockaimLista.set(hol, seged);
+        pontok.minusz5();
+        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
+                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
+            pontok.plusz15();
         
         
     }
@@ -179,6 +201,9 @@ public class Kockak {
         int seged= this.csereleshezKocka;
         csereleshezKocka= this.ellenfelKockaiLista.get(hol);
         this.ellenfelKockaiLista.set(hol, seged);
+        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
+                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
+            pontok.minusz5();
         
         
     }
@@ -203,6 +228,10 @@ public class Kockak {
         int seged= randomKocka;
         csereleshezKocka= sajatKockaimLista.get(hol);
         sajatKockaimLista.set(hol, seged);
+        pontok.minusz5();
+        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
+                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
+            pontok.plusz15();
     }
     
     /**
@@ -259,14 +288,14 @@ public class Kockak {
      * @return 
      */
     public boolean isAdatbazisEmpty(){
-        return new Lekerdezesek(emf).getAll().isEmpty();
+        return new Lekerdezesek(em).getAll().isEmpty();
     }
     
     /**
      * Az adatbázisba menti önmagát a {@code AdatbázisModosito#kockakAdatbazisbaMentese} segítségével.
      */
     public void adatbazisbaMent() {
-        AdatbazisModosito.kockakAdatbazisbaMentese(emf, this);
+        AdatbazisModosito.kockakAdatbazisbaMentese(em, this);
     }
     
     /**
@@ -276,10 +305,10 @@ public class Kockak {
      */
     public Kockak datbazisbolKiszedi(){
         Kockak kocka= new Kockak();
-        kocka.setCsereleshezKocka(AdatbazisModosito.csereleshezKockaAdatbazisbol(emf));
-        kocka.setRandomKockakLista(AdatbazisModosito.randomKockakAdatbazisbol(emf));
-        kocka.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(emf));
-        kocka.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(emf));
+        kocka.setCsereleshezKocka(AdatbazisModosito.csereleshezKockaAdatbazisbol(em));
+        kocka.setRandomKockakLista(AdatbazisModosito.randomKockakAdatbazisbol(em));
+        kocka.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(em));
+        kocka.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(em));
         
         return kocka;
     }
@@ -288,13 +317,14 @@ public class Kockak {
      * Kitörli az állást az adatbázisból.
      */
     public void adatbazisRekordokTorlese(){
-        AdatbazisModosito.mindentKiNullaz(emf);
+        AdatbazisModosito.mindentKiNullaz(em);
     }
     
     /**
      * Lezárja a kommunikációját.
      */
     public void closeConnect(){
+        em.close();
         emf.close();
     }
 

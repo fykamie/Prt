@@ -4,8 +4,8 @@ import adatbazis.BuildPyramid;
 import adatbazis.Lekerdezesek;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +16,10 @@ public class AdatbazisModosito {
     /**
      * A {@code Lekerdezesek#deleteAll()} segítségével törli az adatbázis összes rekordját.
      * 
-     * @param emf 
+     * @param em 
      */
-    public static void mindentKiNullaz(EntityManagerFactory emf){
-        if(!emf.isOpen())
-            emf= Persistence.createEntityManagerFactory("databaseConnection");
-        
-        Lekerdezesek lekerdezes= new Lekerdezesek(emf);
+    public static void mindentKiNullaz(EntityManager em){
+        Lekerdezesek lekerdezes= new Lekerdezesek(em);
         List<BuildPyramid> adatbazisbanVannak= lekerdezes.getAll();
         if(!adatbazisbanVannak.isEmpty())
             lekerdezes.deleteAll();
@@ -36,7 +33,7 @@ public class AdatbazisModosito {
      * @param emf
      * @param kockak 
      */
-    public static void kockakAdatbazisbaMentese( EntityManagerFactory emf, Kockak kockak ){
+    public static void kockakAdatbazisbaMentese( EntityManager emf, Kockak kockak ){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
         kockak.getSajatKockaimLista().forEach(a -> {
@@ -70,7 +67,7 @@ public class AdatbazisModosito {
      * @param emf
      * @return 
      */
-    public static List<Integer> sajatKockakAdatbazisbol(EntityManagerFactory emf){
+    public static List<Integer> sajatKockakAdatbazisbol(EntityManager emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 1).forEach(a -> visszaTer.add(a.getKockak()));
@@ -85,7 +82,7 @@ public class AdatbazisModosito {
      * @param emf
      * @return 
      */
-    public static List<Integer> ellenfelKockakAdatbazisbol(EntityManagerFactory emf){
+    public static List<Integer> ellenfelKockakAdatbazisbol(EntityManager emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 2).forEach(a -> visszaTer.add(a.getKockak()));
@@ -100,7 +97,7 @@ public class AdatbazisModosito {
      * @param emf
      * @return 
      */
-    public static List<Integer> randomKockakAdatbazisbol(EntityManagerFactory emf){
+    public static List<Integer> randomKockakAdatbazisbol(EntityManager emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 3).forEach(a -> visszaTer.add(a.getKockak()));
@@ -115,7 +112,7 @@ public class AdatbazisModosito {
      * @param emf
      * @return 
      */
-    public static Integer csereleshezKockaAdatbazisbol(EntityManagerFactory emf){
+    public static Integer csereleshezKockaAdatbazisbol(EntityManager emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
         LOG.debug("adatbázisból random kockák");
