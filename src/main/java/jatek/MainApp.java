@@ -39,11 +39,7 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    /**
-     * A project main függvénye.
-     * 
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args) {
         launch(args);
 
