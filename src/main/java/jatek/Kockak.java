@@ -185,9 +185,13 @@ public class Kockak {
         csereleshezKocka= this.sajatKockaimLista.get(hol);
         this.sajatKockaimLista.set(hol, seged);
         pontok.minusz5();
-        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
-                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
-            pontok.plusz15();
+        for(int listaIndex= 0; listaIndex< sajatKockaimLista.size()-1; listaIndex++){
+            if( sajatKockaimLista.get(listaIndex)+1  == sajatKockaimLista.get(listaIndex+1) ){
+                if(listaIndex == hol || listaIndex+1 == hol){
+                    pontok.plusz15();
+                }
+            }
+        }
         
         
     }
@@ -201,10 +205,13 @@ public class Kockak {
         int seged= this.csereleshezKocka;
         csereleshezKocka= this.ellenfelKockaiLista.get(hol);
         this.ellenfelKockaiLista.set(hol, seged);
-        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
-                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
-            pontok.minusz5();
-        
+        for(int listaIndex= 0; listaIndex< ellenfelKockaiLista.size()-1; listaIndex++){
+            if( ellenfelKockaiLista.get(listaIndex)+1  == ellenfelKockaiLista.get(listaIndex+1) ){
+                if(listaIndex == hol || listaIndex+1 == hol){
+                    pontok.minusz5();
+                }
+            }
+        }
         
     }
     
@@ -229,9 +236,13 @@ public class Kockak {
         csereleshezKocka= sajatKockaimLista.get(hol);
         sajatKockaimLista.set(hol, seged);
         pontok.minusz5();
-        if(sajatKockaimLista.get(hol)+1 == sajatKockaimLista.get(hol+1)
-                || sajatKockaimLista.get(hol)-1 == sajatKockaimLista.get(hol-1))
-            pontok.plusz15();
+        for(int listaIndex= 0; listaIndex< sajatKockaimLista.size()-1; listaIndex++){
+            if( sajatKockaimLista.get(listaIndex)+1  == sajatKockaimLista.get(listaIndex+1) ){
+                if(listaIndex == hol || listaIndex+1 == hol){
+                    pontok.plusz15();
+                }
+            }
+        }
     }
     
     /**
