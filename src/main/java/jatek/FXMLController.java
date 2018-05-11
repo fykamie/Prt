@@ -15,10 +15,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -35,7 +37,9 @@ public class FXMLController implements Initializable {
     @FXML
     private Button selectedCube;
     @FXML
-    private Label ownPyramidTop;
+    private Label sourceLabel;
+    @FXML
+    private Button ownPyramidTop;
     @FXML
     private Label sellerPyramidTop;
     @FXML
@@ -86,9 +90,10 @@ public class FXMLController implements Initializable {
         sellerCubesList= new ArrayList<>();
         randomCube= new Button("random");
         selectedCube= new Button("selected");
-        ownPyramidTop= new Label();
+        ownPyramidTop= new Button();
         sellerPyramidTop= new Label();
         littlePyramidTop= new Label();
+        sourceLabel= new Label();
         
         
         for(int i= 0; i<20; i++ ){
@@ -113,12 +118,36 @@ public class FXMLController implements Initializable {
             this.ownCubesList.get(i).setLayoutY(this.ownCubesList.get(i).getLayoutY()+(i+1)*25);
             this.sellerCubesList.get(i).setLayoutY(this.sellerCubesList.get(i).getLayoutY()+(i+1)*25);
         }
+        
+        this.ownPyramidTop.setPrefWidth(25);
+        this.ownPyramidTop.setPrefWidth(30);
+        this.ownPyramidTop.setLayoutX(myLayoutX-this.ownPyramidTop.getPrefWidth()/2);
+        this.ownPyramidTop.setLayoutY(60);
+     
+        
+        this.sellerPyramidTop.setPrefWidth(25);
+        this.sellerPyramidTop.setPrefHeight(30);
+        this.sellerPyramidTop.setLayoutX(myLayoutX+650-this.sellerPyramidTop.getPrefWidth()/2);
+        this.sellerPyramidTop.setLayoutY(60);
+        this.sellerPyramidTop.setEffect(new GaussianBlur());
+        
+        this.littlePyramidTop.setPrefWidth(25);
+        this.littlePyramidTop.setPrefHeight(30);
+        this.littlePyramidTop.setLayoutX(myLayoutX+325-this.littlePyramidTop.getPrefWidth()/2);
+        this.littlePyramidTop.setLayoutY(510);
+        
+        this.sourceLabel.setPrefWidth(50*myWidther);
+        this.sourceLabel.setPrefHeight(45);
+        this.sourceLabel.setLayoutX(myLayoutX+325-this.sourceLabel.getPrefWidth()/2);
+        this.sourceLabel.setLayoutY(585);
 
+       
         pane.getChildren().add(randomCube);
         pane.getChildren().add(selectedCube);
         pane.getChildren().add(ownPyramidTop);
         pane.getChildren().add(sellerPyramidTop);
         pane.getChildren().add(littlePyramidTop);
+        pane.getChildren().add(sourceLabel);
         
         modifyOwnCubesList();
         modifySellerCubesList();
@@ -182,10 +211,10 @@ public class FXMLController implements Initializable {
             Label lab= new Label();
             
             but.setText("Újra");
-            but.setPrefHeight(80);
+            but.setPrefHeight(60);
             but.setPrefWidth(100);
-            but.setLayoutX(screenWidth/2);
-            but.setLayoutY(screenHeight/2);
+            but.setLayoutX(myLayoutX+325-this.selectedCube.getPrefWidth()/2);
+            but.setLayoutY(450);
             but.setBackground(Background.EMPTY);
             but.setOnAction(uev -> {
                 try {
@@ -195,13 +224,11 @@ public class FXMLController implements Initializable {
                 }
             });
             
-            lab.setPrefHeight(80);
+            lab.setPrefHeight(60);
             lab.setPrefWidth(100);
-            lab.setLayoutX(screenWidth/2);
-            lab.setLayoutY(screenHeight/2 - 90);
+            but.setLayoutX(myLayoutX+325-this.selectedCube.getPrefWidth()/2);
+            lab.setLayoutY(500);
             lab.setText(EndGame.kiNyert(cube));
-            lab.setAlignment(Pos.CENTER);
-            lab.setBackground(Background.EMPTY);
 
             pane.getChildren().add(lab);
             pane.getChildren().add(but);
@@ -220,9 +247,8 @@ public class FXMLController implements Initializable {
                 Button but= new Button();
                 Label lab= new Label();
 
+                
                 but.setText("Újra");
-                but.setAlignment(Pos.CENTER);
-                but.setBackground(Background.EMPTY);
                 but.setOnAction(uev -> {
                     try {
                         ujraKezdjuk(uev);
@@ -295,6 +321,9 @@ public class FXMLController implements Initializable {
             this.selectedCube.setText( this.cube.getCsereleshezKocka().toString());
             this.selectedCube.setLayoutY(560);
             this.selectedCube.setDisable(false);
+            
+            this.sourceLabel.setText(cube.getPontok().toString());
+
 
         LOG.debug("módosult a cseréléshezKocka gombjának megjelenése");
     }
@@ -344,6 +373,7 @@ public class FXMLController implements Initializable {
             this.ownCubesList.get(i).setLayoutX(myLayoutX-this.ownCubesList.get(i).getPrefWidth()/2);
             this.ownCubesList.get(i).setText(this.cube.getSajatKockaimLista().get(i).toString());
             this.ownCubesList.get(i).setDisable(true);
+            this.ownPyramidTop.setDisable(true);
         }
         
         LOG.debug("modosult a sajátkockák megjelenése");

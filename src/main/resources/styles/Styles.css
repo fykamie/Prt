@@ -28,3 +28,15 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: 100%;    
 }
+
+#sellerPyramidTop{
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/pyramid_top.png');
+    -fx-background-size: stretch;
+}
+
+#ownPyramidTop{
+    -fx-background-color: transparent;
+    -fx-background-image: url('/images/pyramid_top.png');
+    -fx-background-size: stretch;
+}

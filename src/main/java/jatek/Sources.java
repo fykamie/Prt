@@ -45,4 +45,16 @@ public class Sources {
 
         return mySource+= 15;
     }
+
+    /**
+     * Az osztály tartalmát stringgé alakítja.
+     * 
+     * @return 
+     */
+    @Override
+    public String toString() {
+        return "Pontjaim: "+ mySource ;
+    }
+    
+    
 }
