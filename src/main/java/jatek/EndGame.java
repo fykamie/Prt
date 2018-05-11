@@ -1,18 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jatek;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author eszti
- */
 public class EndGame {
+    /**
+     * Ha a paraméterül kapott állásban valamelyik félnek sorban vannak a kockái igazzal, egyébként hamissal tér vissza.
+     */
     private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     public static boolean isEndGame(Kockak kockak){
         LOG.debug("megvizsgáljuk hogy vége van-e a játéknak");
@@ -22,6 +16,12 @@ public class EndGame {
         return false;
     }
     
+    /**
+     * Ha a játékos nyert akkor "Nyertél", egyébként "Vesztettél" {@link java.lang.String}-gel tér vissza.
+     * 
+     * @param kockak
+     * @return 
+     */
     public static String kiNyert(Kockak kockak){
         LOG.debug("megvizsgáljuk ki nyert");
         if(kockak.megvizsgalomSorbanVannakSajatKockaim())

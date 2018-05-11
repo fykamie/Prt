@@ -18,6 +18,12 @@ public class Kevero {
     private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private static Random rn= new Random();
     
+    /**
+     * Megkeveri az átadott lista tagjait.
+     * 
+     * @param keverendo
+     * @return 
+     */
     public static List<Integer> kever(List<Integer> keverendo){
         int csereSeged;
         int pozicio;

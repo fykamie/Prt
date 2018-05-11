@@ -1,11 +1,5 @@
 package jatek;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import adatbazis.BuildPyramid;
 import java.io.IOException;
 import java.net.URL;
@@ -30,11 +24,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * FXML Controller class
- *
- * @author eszti
- */
+
 public class FXMLController implements Initializable {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     
@@ -63,7 +53,6 @@ public class FXMLController implements Initializable {
     private ArrayList<Label> sellerCubesList;
     private Kockak cube= new Kockak();
     private final Ellenfel ellenfel= new Ellenfel();
-    private final Sources pontjaim= new Sources();
     private final AdatbazisModosito adatbaModosito= new AdatbazisModosito();
     private final Kevero keveres= new Kevero();
     private final ReadyForStart readyForStart= new ReadyForStart();
@@ -74,6 +63,9 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
 
+    /**
+     * A kezdeti képernyőt állítja be megfelelő kinézettel a játéknak.
+     */
     public void afterInitialize(){
         Stage stage= (Stage) batfarao.getScene().getWindow();
         stage.setOnCloseRequest(e -> {
@@ -139,6 +131,13 @@ public class FXMLController implements Initializable {
         LOG.debug("új játékhoz be- és felállítottuk a képernyőt");
     }
     
+    /**
+     * Meghívja a logika cserélés metódusát előbb a játékosra, majd az ellenfélre is.
+     * Ha a játékos nyert akkor nem hívja meg az ellenfelet, illetve ha vége van a játéknak akkor elhomályosít mindent 
+     * és lehetőéget ad az újrakezdésre egy gomb megjelenítésével ezzel egyidőben írja ki hogy kinyert
+     * 
+     * @param ev 
+     */
     public void gombActionSajatKockakGombokon(ActionEvent ev){
         LOG.debug("játékos sajátKockáinak gomjai közül kattintott egyre");
 
@@ -146,8 +145,26 @@ public class FXMLController implements Initializable {
         this.selectedCube.setDisable(false);
         this.randomCube.setDisable(false);
         
-        jatekosLep(ev);
-        pontjaim.minusz5();
+        Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
+        Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
+        BuildPyramid mit; 
+        BuildPyramid mivel; 
+        
+        
+        if(!randomotKattintott){
+            cube.swapCserelniEsSajatKockaim(holKattintott);
+          
+            randomotKattintott= false;
+        }
+        else{
+            cube.setRandomKocka(cube.randomotDob());
+            cube.getRandomKockakLista().add(cube.getCsereleshezKocka());
+            cube.swapEgyRandomEsSajatKockaim(holKattintott);
+
+            randomotKattintott= false;
+        }
+
+        LOG.debug("játékos lépését véglegesítjük");
         LOG.debug("játékos lépése után pontjaiból elvettem 5-t");
 
         modifyOwnCubesList();
@@ -174,7 +191,7 @@ public class FXMLController implements Initializable {
                 try {
                     ujraKezdjuk(uev);
                 } catch (IOException ex) {
-                    LOG.debug("Nem tudtuk újrakezdeni");
+                    LOG.debug("Nem tudtam felálítani az új játékra szánt képernyőt");
                 }
             });
             
@@ -234,39 +251,12 @@ public class FXMLController implements Initializable {
 
         }
     }
-    
-    private void jatekosLep(ActionEvent ev){
-        Integer mitKattintott= Integer.valueOf(((Button)ev.getSource()).getText());
-        Integer holKattintott= sajatbanKeresiPoziciojat(mitKattintott);
-        BuildPyramid mit; 
-        BuildPyramid mivel; 
-        
-        
-        if(!randomotKattintott){
-            cube.swapCserelniEsSajatKockaim(holKattintott);
-          
-            randomotKattintott= false;
-        }
-        else{
-            cube.setRandomKocka(cube.randomotDob());
-            cube.getRandomKockakLista().add(cube.getCsereleshezKocka());
-            cube.swapEgyRandomEsSajatKockaim(holKattintott);
 
-            randomotKattintott= false;
-        }
-        if(cube.getSajatKockaimLista().get(holKattintott+1).equals(mitKattintott+1) 
-                || cube.getSajatKockaimLista().get(holKattintott-1).equals(mitKattintott-1)){
-            pontjaim.plusz15();
-
-            LOG.debug("pontokhoz hozzáadtunk 15-t játékos lépése után");
-        }
-
-        LOG.debug("játékos lépését véglegesítjük");
-    }
-
-    private void pontokatAllit(Integer hovaRakott, Integer mitRakott){
-        
-    }
+    /**
+     * Beállít egy randomot a logika az állásokhoz és módosul az összes gomb megjelenése.
+     * 
+     * @param ev 
+     */
     private void gombActionRandomGombon(ActionEvent ev){
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
         this.selectedCube.setDisable(true);
@@ -282,6 +272,10 @@ public class FXMLController implements Initializable {
         LOG.debug("játékos a randomKocka gombjára kattintott");
     }
     
+    /**
+     * Módusol az összesgomb megjelenése.
+     * @param ev 
+     */
     private void gombActionCsereleshezGombon(ActionEvent ev){
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
         this.selectedCube.setDisable(true);
@@ -291,6 +285,9 @@ public class FXMLController implements Initializable {
         LOG.debug("játékos a cseréléshezKocka gombjára kattintott");
     }
     
+    /**
+     * Beállítja az állás alapján a cserélésre szánt kockát megjelenító gombot.
+     */
     private void modifySelectedCube(){
         if ( this.cube.getCsereleshezKocka()< 5) this.selectedCube.setPrefWidth(30);
             else this.selectedCube.setPrefWidth(this.cube.getCsereleshezKocka()*myWidther);
@@ -302,6 +299,9 @@ public class FXMLController implements Initializable {
         LOG.debug("módosult a cseréléshezKocka gombjának megjelenése");
     }
     
+    /**
+     * Módosítja a random kockát megjelenító gomb megjelenését.
+     */
     private void modifyRandomCube(){      
         if ( this.cube.getCsereleshezKocka()< 5)
             this.randomCube.setPrefWidth(30);
@@ -315,6 +315,9 @@ public class FXMLController implements Initializable {
         LOG.debug("módosult a randomKocka gombjának megjelenése");
     }
    
+    /**
+     * Beállítja az állás alapján az ellenfél kockáit megjelenító labeleket.
+     */
     private void modifySellerCubesList(){
         for(int i= 0; i<20; i++){
             if ( this.cube.getEllenfelKockaiLista().get(i) < 5) 
@@ -328,7 +331,10 @@ public class FXMLController implements Initializable {
 
         LOG.debug("módosult az ellenfél kockáinak megjelenése");
     }
-        
+    
+    /**
+     * Beállítja az állás alapján a játékos kockáit megjelenító gombokat.
+     */
     private void modifyOwnCubesList(){
         for(int i= 19; i>=0; i--){
             if ( this.cube.getSajatKockaimLista().get(i) < 5)
@@ -343,6 +349,12 @@ public class FXMLController implements Initializable {
         LOG.debug("modosult a sajátkockák megjelenése");
     }
    
+    /**
+     * A logika részére megkeresi hogy a sajátgombok közül hol szeretne cserélni a játékos.
+     * 
+     * @param minek
+     * @return 
+     */
     private Integer sajatbanKeresiPoziciojat(Integer minek){
         int holvan;
         for(holvan= 0; holvan< ownCubesList.size(); holvan++)
@@ -354,6 +366,12 @@ public class FXMLController implements Initializable {
          return holvan;
     }
     
+    /**
+     * Új scene-t állít fel a játék számára.
+     * 
+     * @param ev
+     * @throws IOException 
+     */
     private void ujraKezdjuk(ActionEvent ev) throws IOException{
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
         Parent root = fxmlLoader.load();

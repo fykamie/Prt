@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jatek;
 
 import java.util.ArrayList;
@@ -10,16 +5,18 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author eszti
- */
 public class Ellenfel {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
 
+    /**
+     * Az elenfél új állást generál magnak.
+     * Attólfuggően, hogy milyen kategóriába(első, vagy nagyobb) esik a {@code Kockak#getCsereleshezKocka()} fog a saját listájában
+     * megfelelő kategóriában csélni az ellenfél.
+     * 
+     * @param kockak 
+     */
     public void lep( Kockak kockak){
         
-        AdatbazisModosito adatbazisModosito= new AdatbazisModosito();
         List<Integer> csereSeged= new ArrayList<>();
         Integer listaIndex= 2;
         
@@ -44,7 +41,14 @@ public class Ellenfel {
             listaIndex+= 3;
         }
     }
-    
+    /**
+     * Ellenörzi hogy a paraméterül adott szám beleesik-e a paraméterül adott intervallumba(kategóriába).
+     * 
+     * @param ellenerozni ellenöriendő szám
+     * @param alsoHatar kategória alsó határja
+     * @param felsoHatar kategóra felső határja
+     * @return igaz ha beleesik, egyébként hamis
+     */
     public boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){
         LOG.debug("ellenfél megvizsgálja intervallumba esik-e kapott kocka");
         for(int checker= alsoHatar; checker <= felsoHatar; checker++){
@@ -55,6 +59,12 @@ public class Ellenfel {
         return false;
     }
     
+    /**
+     * Attól függően hogy milyen nagy a {@code Kockak#getCsereleshezKocka()}, cseréli ki a saját listájában a cserélésre kapott kockát.
+     * Ha a csserélésre kapott nagyobb mint a saját listájában az első kocka akkor a második helyre rakja be, egyébként az elsőre.
+     * 
+     * @param kockak 
+     */
     public void elsoKategoriabanCserel( Kockak kockak ){
         int csereSeged;
         if( kockak.getCsereleshezKocka()> kockak.getEllenfelKockaiLista().get(0) ){
@@ -71,6 +81,14 @@ public class Ellenfel {
                   
     }
     
+    /**
+     * Attól függően hogy milyen nagy a {@code Kockak#getCsereleshezKocka()}, cseréli ki a kategória tagjait és a cserélésre kapott kockát.
+     * Ha a cserélésre szánt a legkisebb akkor a kategória aljára kerül, ha legnagyobb a tetejére, egyébbként középre
+     * 
+     * @param kategoriaTagjai
+     * @param kockak
+     * @return 
+     */
     public List<Integer> nagyobbKategoriakbanCserel(List<Integer> kategoriaTagjai, Kockak kockak){
         
         List<Integer> csereSegedLista= new ArrayList<>();
@@ -79,6 +97,8 @@ public class Ellenfel {
         int max= getMax(csereSegedLista);
         int min= getMin(csereSegedLista);
         int csereSeged;
+        LOG.debug("kapott kategória: "+ kategoriaTagjai);
+        LOG.debug("cseréléshez: "+ kockak.getCsereleshezKocka());
         
         if( kockak.getCsereleshezKocka()== max ){
             csereSeged= kategoriaTagjai.get(2);
@@ -96,27 +116,25 @@ public class Ellenfel {
             kockak.setCsereleshezKocka(csereSeged);
         }
 
-        LOG.debug("ellenfél cserélt kategóriában");
+        LOG.debug("Felállított kategória: "+ kategoriaTagjai);
         return kategoriaTagjai;
     }
     
+    /**
+     * A kapott listából kikeresi a maximumot.
+     * @param keresendo
+     * @return 
+     */
     public Integer getMax(List<Integer> keresendo){
-        int max= keresendo.get(0);
-        for( Integer toBeMax : keresendo ){
-            if(toBeMax > max)
-                max= toBeMax;
-        }
-        LOG.debug("ellenfél maximumot keresett");
-        return max;
+        return keresendo.stream().mapToInt(a -> a).max().getAsInt();
     }
     
+    /**
+     * A kapott listából kikeresi a minimumot.
+     * @param keresendo
+     * @return 
+     */
     public Integer getMin(List<Integer> keresendo){
-        int min= keresendo.get(0);
-        for( Integer toBeMin : keresendo ){
-            if(toBeMin < min)
-                min= toBeMin;
-        }
-        LOG.debug("ellenfél minimumot keresett");
-        return min;
+        return keresendo.stream().mapToInt(a -> a).min().getAsInt();
     }
 }

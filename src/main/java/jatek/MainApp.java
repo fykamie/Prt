@@ -1,7 +1,5 @@
 package jatek;
 
-import java.util.Arrays;
-import java.util.List;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +11,12 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
+    /**
+     * Megjelenít egy új ablakot a játéknak és meghívja bele a "controller" modell osztályát.
+     * 
+     * @param stage
+     * @throws Exception 
+     */
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
@@ -36,11 +40,8 @@ public class MainApp extends Application {
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
+     * A project main függvénye.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {

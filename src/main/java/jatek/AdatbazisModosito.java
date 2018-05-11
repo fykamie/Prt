@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jatek;
 
 import adatbazis.BuildPyramid;
@@ -14,14 +9,15 @@ import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author eszti
- */
 public class AdatbazisModosito {
         
     private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
-    
+
+    /**
+     * A {@code Lekerdezesek#deleteAll()} segítségével törli az adatbázis összes rekordját.
+     * 
+     * @param emf 
+     */
     public static void mindentKiNullaz(EntityManagerFactory emf){
         if(!emf.isOpen())
             emf= Persistence.createEntityManagerFactory("databaseConnection");
@@ -34,6 +30,12 @@ public class AdatbazisModosito {
         LOG.debug("adatbázisban kitörölte az összes rekordot");
     }
         
+    /**
+     * A paraméterül kapott állást menti le az adatbázisba.
+     * 
+     * @param emf
+     * @param kockak 
+     */
     public static void kockakAdatbazisbaMentese( EntityManagerFactory emf, Kockak kockak ){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
@@ -62,6 +64,12 @@ public class AdatbazisModosito {
         LOG.debug("adatbázisba mentette az állást");
     }
     
+    /**
+     * Lekéri az adatbázisból a játékos állását.
+     * 
+     * @param emf
+     * @return 
+     */
     public static List<Integer> sajatKockakAdatbazisbol(EntityManagerFactory emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
@@ -71,6 +79,12 @@ public class AdatbazisModosito {
         return visszaTer;        
     }
     
+    /**
+     * Lekéri az adatbázisból az ellenfél álllását.
+     * 
+     * @param emf
+     * @return 
+     */
     public static List<Integer> ellenfelKockakAdatbazisbol(EntityManagerFactory emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
@@ -80,6 +94,12 @@ public class AdatbazisModosito {
         return visszaTer;        
     }
     
+    /**
+     * Lekéri az adatbázisból a {@code Kockak#randomKockakLista } állását.
+     * 
+     * @param emf
+     * @return 
+     */
     public static List<Integer> randomKockakAdatbazisbol(EntityManagerFactory emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         List<Integer> visszaTer= new ArrayList<>();
@@ -89,6 +109,12 @@ public class AdatbazisModosito {
         return visszaTer;        
     }
     
+    /**
+     * Lekéri az adatbázisból a {@code Kockak#csereleshezKocka}-t.
+     * 
+     * @param emf
+     * @return 
+     */
     public static Integer csereleshezKockaAdatbazisbol(EntityManagerFactory emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         

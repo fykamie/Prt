@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jatek;
 
 import adatbazis.BuildPyramid;
@@ -16,23 +11,23 @@ import javax.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author eszti
- */
 public class ReadyForStart {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     private final Random rn= new Random();
     private Integer random;
     
+    /**
+     * Beállítja kezdésre az állást.
+     * 
+     * @param kockak
+     * @return 
+     */
     public Kockak makeReady(Kockak kockak){
-
-        LOG.debug("elkezdünk felkészülni a játékra");
 
         EntityManagerFactory ef= Persistence.createEntityManagerFactory("databaseConnection");
         Lekerdezesek lekerdezes= new Lekerdezesek(ef);
         
-        new AdatbazisModosito().mindentKiNullaz(ef);
+        AdatbazisModosito.mindentKiNullaz(ef);
         
         Kockak kocku = new Kockak();
         
@@ -52,6 +47,7 @@ public class ReadyForStart {
         }
         
         kie = Kevero.kever(kie);
+
         
         for(int i = 0; i < 50; ++i){
             if(kie.get(i) == 3){
@@ -59,6 +55,7 @@ public class ReadyForStart {
                 break;
             }
         }
+        LOG.debug("Kihez tartozik lista: "+kie);
         
         for(int i = 0; i < 50; ++i){
             mindenKocka.get(i).setKihezTartozik(kie.get(i));
@@ -95,7 +92,7 @@ public class ReadyForStart {
         
         ef.close();
 
-        LOG.debug("felállítottuk az adatbázist és kockákat kezdéshez");
+        LOG.debug("Elkészült kocka: "+kocku.toString());
         return kocku;
     }
     
