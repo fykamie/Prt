@@ -27,10 +27,6 @@ public class KockakTest {
         kockak.setRandomKocka(5);
         kockak.setCsereleshezKocka(6);
     }
-    
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testSetRandomKocka() {

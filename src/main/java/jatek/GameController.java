@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class FXMLController implements Initializable {
+public class GameController implements Initializable {
     private final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     
     @FXML
@@ -419,7 +419,7 @@ public class FXMLController implements Initializable {
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         
-        fxmlLoader.<FXMLController>getController().afterInitialize();
+        fxmlLoader.<GameController>getController().afterInitialize();
         stage.show();
     }
 }

@@ -35,7 +35,7 @@ public class MainApp extends Application {
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         
-        fxmlLoader.<FXMLController>getController().afterInitialize();
+        fxmlLoader.<GameController>getController().afterInitialize();
         stage.show();
     }
 
