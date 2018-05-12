@@ -87,6 +87,7 @@ public class ReadyForStart {
         
         kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
+        kocku.closeConnect();
         LOG.info("Elkészült kocka: "+kocku.toString());
         return kocku;
     }
