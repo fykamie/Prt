@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -78,9 +83,12 @@ public class GameController implements Initializable {
         batfarao.setFitHeight(screenHeight);
         batfarao.setFitWidth(screenWidth/6);
         batfarao.setLayoutX(primaryScreenBounds.getMinX()+screenWidth-batfarao.getFitWidth()-7);
-
-        cube= readyForStart.makeReady(cube);
-
+        if(cube.isAdatbazisEmpty()){
+            cube= readyForStart.makeReady(cube);
+        }
+        else{
+            cube= cube.datbazisbolKiszedi();
+        }
         cube.setSajatKockaimLista(Kevero.kever(cube.getSajatKockaimLista()));
         cube.setEllenfelKockaiLista(Kevero.kever(cube.getEllenfelKockaiLista()));
         
@@ -99,7 +107,7 @@ public class GameController implements Initializable {
             Label lab= new Label("sellerCube"+i);
             
             but.setLayoutY(60);
-            but.setOnAction(ev -> gombActionSajatKockakGombokon(ev));
+            but.setOnAction(ev -> gombActionSajatKockakGombokon(ev) );
             lab.setLayoutY(60);
             
             ownCubesList.add(but);
@@ -140,12 +148,12 @@ public class GameController implements Initializable {
         this.sourceLabel.setLayoutY(585);
 
        
-        pane.getChildren().add(randomCube);
+        pane.getChildren().add(sourceLabel);
         pane.getChildren().add(selectedCube);
+        pane.getChildren().add(randomCube);
         pane.getChildren().add(ownPyramidTop);
         pane.getChildren().add(sellerPyramidTop);
         pane.getChildren().add(littlePyramidTop);
-        pane.getChildren().add(sourceLabel);
         
         modifyOwnCubesList();
         modifySellerCubesList();
@@ -236,9 +244,20 @@ public class GameController implements Initializable {
         }
         else{
             LOG.debug("játékos lépett átadta a vezérlést a gépnek");
-
+            
+//            Timer timer= new Timer();
+//            timer.schedule(new TimerTask(){
+//                 @Override
+//                public void run() {
+//                    batfarao.setImage(new Image("/images/batfarao_agyal.gif"));
+//                    
+//                }
+//            }, 3000, 1000);
+//            TimeUnit.SECONDS.sleep(3);
             ellenfel.lep(cube);
+            
             cube.adatbazisbaMent();
+            cube= cube.datbazisbolKiszedi();
             if( EndGame.isEndGame(cube)){
                 sellerCubesList.forEach(a -> a.setDisable(false));
             
@@ -285,6 +304,8 @@ public class GameController implements Initializable {
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
         this.selectedCube.setDisable(true);
         this.randomCube.setDisable(true);
+        this.ownPyramidTop.setDisable(false);
+        this.littlePyramidTop.setDisable(true);
         
         cube.setRandomKocka(cube.randomotDob());
         randomCube.setPrefWidth(this.cube.getRandomKocka()*myWidther);
@@ -302,8 +323,10 @@ public class GameController implements Initializable {
      */
     private void gombActionCsereleshezGombon(ActionEvent ev){
         this.ownCubesList.stream().forEach(a -> a.setDisable(false));
+        this.ownPyramidTop.setDisable(false);
         this.selectedCube.setDisable(true);
         this.randomCube.setDisable(true);
+        this.littlePyramidTop.setDisable(true);
         this.randomotKattintott= false;
         
         LOG.debug("játékos a cseréléshezKocka gombjára kattintott");
@@ -321,6 +344,7 @@ public class GameController implements Initializable {
             this.selectedCube.setDisable(false);
             
             this.sourceLabel.setText(cube.getPontok().toString());
+            this.littlePyramidTop.setDisable(false);
 
 
         LOG.debug("módosult a cseréléshezKocka gombjának megjelenése");
