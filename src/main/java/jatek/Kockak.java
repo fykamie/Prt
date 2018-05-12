@@ -310,13 +310,12 @@ public class Kockak {
      * @return 
      */
     public Kockak datbazisbolKiszedi(){
-        Kockak kocka= new Kockak();
-        kocka.setCsereleshezKocka(AdatbazisModosito.csereleshezKockaAdatbazisbol(em));
-        kocka.setRandomKockakLista(AdatbazisModosito.randomKockakAdatbazisbol(em));
-        kocka.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(em));
-        kocka.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(em));
+        this.setCsereleshezKocka(AdatbazisModosito.csereleshezKockaAdatbazisbol(em));
+        this.setRandomKockakLista(AdatbazisModosito.randomKockakAdatbazisbol(em));
+        this.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(em));
+        this.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(em));
         
-        return kocka;
+        return this;
     }
     
     /**

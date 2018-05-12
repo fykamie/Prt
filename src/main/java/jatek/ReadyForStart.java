@@ -26,8 +26,6 @@ public class ReadyForStart {
         
         AdatbazisModosito.mindentKiNullaz(kockak.getManager());
         
-        Kockak kocku = new Kockak();
-        
         List<BuildPyramid> mindenKocka = new ArrayList<>(50);
         for(int i = 1; i < 51; ++i){
             
@@ -63,21 +61,21 @@ public class ReadyForStart {
             lekerdezes.insert(e);
         });
         
-        kocku.setSajatKockaimLista(
+        kockak.setSajatKockaimLista(
                 mindenKocka.stream()
                         .filter(e -> e.getKihezTartozik() == 1)
                         .mapToInt(f -> f.getKockak())
                         .boxed()
                         .collect(Collectors.toList())
         );
-        kocku.setEllenfelKockaiLista(
+        kockak.setEllenfelKockaiLista(
                 mindenKocka.stream()
                         .filter(e -> e.getKihezTartozik() == 2)
                         .mapToInt(f -> f.getKockak())
                         .boxed()
                         .collect(Collectors.toList())
         );
-        kocku.setRandomKockakLista(
+        kockak.setRandomKockakLista(
                 mindenKocka.stream()
                         .filter(e -> e.getKihezTartozik() == 3)
                         .mapToInt(f -> f.getKockak())
@@ -85,10 +83,10 @@ public class ReadyForStart {
                         .collect(Collectors.toList())
         );
         
-        kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
+        kockak.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
-        LOG.info("Elkészült kocka: "+kocku.toString());
-        return kocku;
+        LOG.info("Elkészült kocka: "+kockak.toString());
+        return kockak;
     }
     
 }
