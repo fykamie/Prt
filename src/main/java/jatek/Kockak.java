@@ -316,7 +316,6 @@ public class Kockak {
         kocka.setEllenfelKockaiLista(AdatbazisModosito.ellenfelKockakAdatbazisbol(em));
         kocka.setSajatKockaimLista(AdatbazisModosito.sajatKockakAdatbazisbol(em));
         
-        kocka.closeConnect();
         return kocka;
     }
     
