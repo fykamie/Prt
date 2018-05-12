@@ -52,7 +52,7 @@ public class ReadyForStart {
                 break;
             }
         }
-        LOG.debug("Kihez tartozik lista: "+kie);
+        LOG.info("Kihez tartozik lista: "+kie);
         
         for(int i = 0; i < 50; ++i){
             mindenKocka.get(i).setKihezTartozik(kie.get(i));
@@ -87,7 +87,7 @@ public class ReadyForStart {
         
         kocku.setCsereleshezKocka(mindenKocka.stream().filter(e -> e.getKihezTartozik() == 4).findFirst().get().getKockak());
         
-        LOG.debug("Elkészült kocka: "+kocku.toString());
+        LOG.info("Elkészült kocka: "+kocku.toString());
         return kocku;
     }
     

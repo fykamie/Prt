@@ -9,7 +9,7 @@ public class EndGame {
      */
     private static final Logger LOG= LoggerFactory.getLogger(AdatbazisModosito.class.getClass());
     public static boolean isEndGame(Kockak kockak){
-        LOG.debug("megvizsgáljuk hogy vége van-e a játéknak");
+        LOG.info("megvizsgáljuk hogy vége van-e a játéknak");
         if( kockak.megvizsgalomSorbanVannakEllenfelKockai() || kockak.megvizsgalomSorbanVannakSajatKockaim() )
             return true;
         
@@ -23,7 +23,7 @@ public class EndGame {
      * @return 
      */
     public static String kiNyert(Kockak kockak){
-        LOG.debug("megvizsgáljuk ki nyert");
+        LOG.info("megvizsgáljuk ki nyert");
         if(kockak.megvizsgalomSorbanVannakSajatKockaim())
             return "Nyertél";
         

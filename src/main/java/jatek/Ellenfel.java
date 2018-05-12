@@ -50,7 +50,7 @@ public class Ellenfel {
      * @return igaz ha beleesik, egyébként hamis
      */
     public boolean intervallumbaEsik(Integer ellenerozni, Integer alsoHatar, Integer felsoHatar){
-        LOG.debug("ellenfél megvizsgálja intervallumba esik-e kapott kocka");
+        LOG.info("ellenfél megvizsgálja intervallumba esik-e kapott kocka");
         for(int checker= alsoHatar; checker <= felsoHatar; checker++){
             if(ellenerozni == checker)
                 return true;
@@ -77,7 +77,7 @@ public class Ellenfel {
             kockak.setEgyKockaellenfelKockaibol(0, kockak.getCsereleshezKocka());
             kockak.setCsereleshezKocka(csereSeged);          
         }
-        LOG.debug("ellenfél cserélt kategóriában");
+        LOG.info("ellenfél cserélt kategóriában");
                   
     }
     
@@ -97,8 +97,8 @@ public class Ellenfel {
         int max= getMax(csereSegedLista);
         int min= getMin(csereSegedLista);
         int csereSeged;
-        LOG.debug("kapott kategória: "+ kategoriaTagjai);
-        LOG.debug("cseréléshez: "+ kockak.getCsereleshezKocka());
+        LOG.info("kapott kategória: "+ kategoriaTagjai);
+        LOG.info("cseréléshez: "+ kockak.getCsereleshezKocka());
         
         if( kockak.getCsereleshezKocka()== max ){
             csereSeged= kategoriaTagjai.get(2);
@@ -116,7 +116,7 @@ public class Ellenfel {
             kockak.setCsereleshezKocka(csereSeged);
         }
 
-        LOG.debug("Felállított kategória: "+ kategoriaTagjai);
+        LOG.info("Felállított kategória: "+ kategoriaTagjai);
         return kategoriaTagjai;
     }
     

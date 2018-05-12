@@ -29,7 +29,7 @@ public class Kevero {
             keverendo.set(pozicio, csereSeged); 
         }
         
-        LOG.debug("megkevertük a listát");
+        LOG.info("megkevertük a listát");
         return keverendo;
     }
 }

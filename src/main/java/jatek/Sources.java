@@ -30,7 +30,7 @@ public class Sources {
      * @return 
      */
     public int minusz5(){
-        LOG.debug("csökkent a pontszám öttel");
+        LOG.info("csökkent a pontszám öttel");
 
         return mySource-= 5;
     }
@@ -41,7 +41,7 @@ public class Sources {
      * @return 
      */
     public int plusz15(){
-        LOG.debug("nőtt a pontszám tizenöttel");
+        LOG.info("nőtt a pontszám tizenöttel");
 
         return mySource+= 15;
     }

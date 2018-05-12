@@ -5,22 +5,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -135,7 +130,10 @@ public class GameController implements Initializable {
         this.sellerPyramidTop.setPrefHeight(30);
         this.sellerPyramidTop.setLayoutX(myLayoutX+650-this.sellerPyramidTop.getPrefWidth()/2);
         this.sellerPyramidTop.setLayoutY(60);
-        this.sellerPyramidTop.setEffect(new GaussianBlur());
+        BoxBlur bb= new BoxBlur();
+        bb.setHeight(10);
+        bb.setWidth(10);
+        this.sellerPyramidTop.setEffect(bb);
         
         this.littlePyramidTop.setPrefWidth(25);
         this.littlePyramidTop.setPrefHeight(30);
@@ -163,7 +161,7 @@ public class GameController implements Initializable {
         randomCube.setOnAction( (ev) -> gombActionRandomGombon(ev) );
         selectedCube.setOnAction( (ev) -> gombActionCsereleshezGombon(ev) );
 
-        LOG.debug("új játékhoz be- és felállítottuk a képernyőt");
+        LOG.info("új játékhoz be- és felállítottuk a képernyőt");
     }
     
     /**
@@ -174,7 +172,7 @@ public class GameController implements Initializable {
      * @param ev 
      */
     public void gombActionSajatKockakGombokon(ActionEvent ev){
-        LOG.debug("játékos sajátKockáinak gomjai közül kattintott egyre");
+        LOG.info("játékos sajátKockáinak gomjai közül kattintott egyre");
 
         this.ownCubesList.stream().forEach(a -> a.setDisable(true));
         this.selectedCube.setDisable(false);
@@ -199,8 +197,8 @@ public class GameController implements Initializable {
             randomotKattintott= false;
         }
 
-        LOG.debug("játékos lépését véglegesítjük");
-        LOG.debug("játékos lépése után pontjaiból elvettem 5-t");
+        LOG.info("játékos lépését véglegesítjük");
+        LOG.info("játékos lépése után pontjaiból elvettem 5-t");
 
         modifyOwnCubesList();
         modifySelectedCube();
@@ -226,7 +224,7 @@ public class GameController implements Initializable {
                 try {
                     ujraKezdjuk(uev);
                 } catch (IOException ex) {
-                    LOG.debug("Nem tudtam felálítani az új játékra szánt képernyőt");
+                    LOG.info("Nem tudtam felálítani az új játékra szánt képernyőt");
                 }
             });
             
@@ -240,10 +238,10 @@ public class GameController implements Initializable {
             pane.getChildren().add(but);
             
             cube.adatbazisRekordokTorlese();
-            LOG.debug("A játék véget ért");
+            LOG.info("A játék véget ért");
         }
         else{
-            LOG.debug("játékos lépett átadta a vezérlést a gépnek");
+            LOG.info("játékos lépett átadta a vezérlést a gépnek");
             
 //            Timer timer= new Timer();
 //            timer.schedule(new TimerTask(){
@@ -257,31 +255,42 @@ public class GameController implements Initializable {
             ellenfel.lep(cube);
             
             cube.adatbazisbaMent();
-            cube= cube.datbazisbolKiszedi();
             if( EndGame.isEndGame(cube)){
                 sellerCubesList.forEach(a -> a.setDisable(false));
+                BoxBlur bb= new BoxBlur();
+                bb.setHeight(0);
+                bb.setWidth(0);
+                sellerCubesList.forEach(a -> a.setEffect(bb));
+                sellerPyramidTop.setEffect(bb);
             
-                Button but= new Button();
-                Label lab= new Label();
+            Button but= new Button();
+            Label lab= new Label();
+            
+            but.setText("Újra");
+            but.setPrefHeight(60);
+            but.setPrefWidth(100);
+            but.setLayoutX(myLayoutX+325-this.selectedCube.getPrefWidth()/2);
+            but.setLayoutY(450);
+            but.setBackground(Background.EMPTY);
+            but.setOnAction(uev -> {
+                try {
+                    ujraKezdjuk(uev);
+                } catch (IOException ex) {
+                    LOG.info("Nem tudtam felálítani az új játékra szánt képernyőt");
+                }
+            });
+            
+            lab.setPrefHeight(60);
+            lab.setPrefWidth(100);
+            but.setLayoutX(myLayoutX+325-this.selectedCube.getPrefWidth()/2);
+            lab.setLayoutY(500);
+            lab.setText(EndGame.kiNyert(cube));
 
-                
-                but.setText("Újra");
-                but.setOnAction(uev -> {
-                    try {
-                        ujraKezdjuk(uev);
-                    } catch (IOException ex) {
-                        LOG.debug("Nem tudtuk újrakezdeni");
-                    }
-                });
-                lab.setText(EndGame.kiNyert(cube));
-                lab.setAlignment(Pos.CENTER);
-                lab.setBackground(Background.EMPTY);
-
-                pane.getChildren().add(lab);
-                pane.getChildren().add(but);
-                
-                cube.adatbazisRekordokTorlese();
-                LOG.debug("A játék véget ért");
+            pane.getChildren().add(lab);
+            pane.getChildren().add(but);
+            
+            cube.adatbazisRekordokTorlese();
+            LOG.info("A játék véget ért");
             }
             else{
                 modifySellerCubesList();
@@ -289,7 +298,7 @@ public class GameController implements Initializable {
                 modifySelectedCube();
                 modifyRandomCube();
 
-                LOG.debug("ellenfél lépett visszaadta a vezérlést a játékosnak");
+                LOG.info("ellenfél lépett visszaadta a vezérlést a játékosnak");
             }
 
         }
@@ -314,7 +323,7 @@ public class GameController implements Initializable {
         
         randomotKattintott= true;
         
-        LOG.debug("játékos a randomKocka gombjára kattintott");
+        LOG.info("játékos a randomKocka gombjára kattintott");
     }
     
     /**
@@ -329,7 +338,7 @@ public class GameController implements Initializable {
         this.littlePyramidTop.setDisable(true);
         this.randomotKattintott= false;
         
-        LOG.debug("játékos a cseréléshezKocka gombjára kattintott");
+        LOG.info("játékos a cseréléshezKocka gombjára kattintott");
     }
     
     /**
@@ -347,7 +356,7 @@ public class GameController implements Initializable {
             this.littlePyramidTop.setDisable(false);
 
 
-        LOG.debug("módosult a cseréléshezKocka gombjának megjelenése");
+        LOG.info("módosult a cseréléshezKocka gombjának megjelenése");
     }
     
     /**
@@ -363,13 +372,16 @@ public class GameController implements Initializable {
         this.randomCube.setLayoutY(535);
         this.randomCube.setDisable(false);
             
-        LOG.debug("módosult a randomKocka gombjának megjelenése");
+        LOG.info("módosult a randomKocka gombjának megjelenése");
     }
    
     /**
      * Beállítja az állás alapján az ellenfél kockáit megjelenító labeleket.
      */
     private void modifySellerCubesList(){
+        BoxBlur bb= new BoxBlur();
+        bb.setHeight(10);
+        bb.setWidth(10);
         for(int i= 0; i<20; i++){
             if ( this.cube.getEllenfelKockaiLista().get(i) < 5) 
                 this.sellerCubesList.get(i).setPrefWidth(30);
@@ -377,10 +389,10 @@ public class GameController implements Initializable {
                 this.sellerCubesList.get(i).setPrefWidth(this.cube.getEllenfelKockaiLista().get(i)*myWidther);
             this.sellerCubesList.get(i).setLayoutX(myLayoutX+650-this.sellerCubesList.get(i).getPrefWidth()/2);
             this.sellerCubesList.get(i).setText(this.cube.getEllenfelKockaiLista().get(i).toString());
-            this.sellerCubesList.get(i).setEffect(new GaussianBlur());
+            this.sellerCubesList.get(i).setEffect(bb);
         }
 
-        LOG.debug("módosult az ellenfél kockáinak megjelenése");
+        LOG.info("módosult az ellenfél kockáinak megjelenése");
     }
     
     /**
@@ -398,7 +410,7 @@ public class GameController implements Initializable {
             this.ownPyramidTop.setDisable(true);
         }
         
-        LOG.debug("modosult a sajátkockák megjelenése");
+        LOG.info("modosult a sajátkockák megjelenése");
     }
    
     /**
@@ -413,7 +425,7 @@ public class GameController implements Initializable {
             if( Integer.valueOf(ownCubesList.get(holvan).getText()) == minek)
                 break;
         
-         LOG.debug("holvan a kattintás= "+holvan);
+         LOG.info("holvan a kattintás= "+holvan);
 
          return holvan;
     }

@@ -23,7 +23,7 @@ public class AdatbazisModosito {
         if(!adatbazisbanVannak.isEmpty())
             lekerdezes.deleteAll();
 
-        LOG.debug("adatbázisban kitörölte az összes rekordot");
+        LOG.info("adatbázisban kitörölte az összes rekordot");
     }
         
     /**
@@ -57,7 +57,7 @@ public class AdatbazisModosito {
         berakni.setKihezTartozik(4);
         lekerdezesek.insert(berakni);
 
-        LOG.debug("adatbázisba mentette az állást");
+        LOG.info("adatbázisba mentette az állást");
     }
     
     /**
@@ -71,7 +71,7 @@ public class AdatbazisModosito {
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 1).forEach(a -> visszaTer.add(a.getKockak()));
 
-        LOG.debug("adatbázisból saját kockák");
+        LOG.info("adatbázisból saját kockák");
         return visszaTer;        
     }
     
@@ -86,7 +86,7 @@ public class AdatbazisModosito {
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 2).forEach(a -> visszaTer.add(a.getKockak()));
 
-        LOG.debug("adatbázisból ellenfel kockák");
+        LOG.info("adatbázisból ellenfel kockák");
         return visszaTer;        
     }
     
@@ -101,7 +101,7 @@ public class AdatbazisModosito {
         List<Integer> visszaTer= new ArrayList<>();
         lekerdezesek.get(a -> a.getKihezTartozik() == 3).forEach(a -> visszaTer.add(a.getKockak()));
 
-        LOG.debug("adatbázisból random kockák");
+        LOG.info("adatbázisból random kockák");
         return visszaTer;        
     }
     
@@ -114,7 +114,7 @@ public class AdatbazisModosito {
     public static Integer csereleshezKockaAdatbazisbol(EntityManager emf){
         Lekerdezesek lekerdezesek= new Lekerdezesek(emf);
         
-        LOG.debug("adatbázisból random kockák");
+        LOG.info("adatbázisból random kockák");
         return lekerdezesek.get(a -> a.getKihezTartozik() == 4).get(0).getKockak();
     }
 }
